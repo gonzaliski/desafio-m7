@@ -1,4 +1,5 @@
 import { Router } from "@vaadin/router"
+import { state } from "../../state"
 
 customElements.define("header-el", class HeaderElement extends HTMLElement{
     pawImageURL:string
@@ -25,6 +26,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
        })
     }
     render(){
+        const cs = state.getState()
         this.pawImageURL = require("url:../../assets/paw.png");
      this.innerHTML=`
       <nav class="nav-bar">
@@ -45,7 +47,12 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             <a class="nav-link" href="/nearPets" >Mascotas cerca</a>
         
         </li>
+        <div class="user-info__container">
+        <p class="user-name__display">${cs.email || "Usuario"}</p>
+        <a class="log-out">Cerrar sesión</a>
+        </div>
       </ul>
+
       <burger-menu></burger-menu>
       </nav>
     `
@@ -66,13 +73,11 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         li{
             list-style:none;
         }
-        a{
-            text-decoration:none;
-        }
+
         .nav-menu{
             display:flex;
             position:fixed;
-            height:30vh;
+            height:auto;
             left:-100%;
             top:70px;
             gap:0;
@@ -93,15 +98,18 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
                 height:100%;
                 background-color:transparent;
                 gap:30px;
+                box-shadow:none;
             }
             burger-menu{
                 display:none;
             }
         }
         .nav-menu.active{
+            padding-top: 5%;
             left:0;
         }
         .nav-link{
+            text-decoration:none;
             font-family:'Poppins';
             text-decoration: none;
             color:inherit;
@@ -111,6 +119,33 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         .nav-link:hover{
             color:white;
         }
+
+        .user-info__container{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            margin-top:10px;
+            padding-bottom:10px;
+        }
+        .user-name__display{
+            font-family:'Poppins';
+           
+        }
+        @media(min-width:768px){
+            .user-name__display{
+                display:none;
+            }
+        }
+        .log-out{
+            font-family:'Poppins';
+            color:blue;
+        }
+        @media(min-width:768px){
+            .log-out{
+                display:none;
+            }
+        }
+
     `
 
         this.appendChild(style)

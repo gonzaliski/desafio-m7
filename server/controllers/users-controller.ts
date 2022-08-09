@@ -4,10 +4,10 @@ import { getSHA256ofString, updatePassword} from "./auth-controller"
 
 
 export async function createUser(data){
-    const {email, password,full_name} = data
+    const {email, password,fullName} = data
     const newUser =  await User.create({
             email,
-            full_name,
+            full_name:fullName,
     })
     let userId = newUser.get("id")
     const newAuthCreated = await Auth.create({
@@ -30,16 +30,6 @@ export function getAllUsers(){
     return User.findAll({})
 }
 
-export async function updateOrCreateUser(data,userId?){
-    console.log(data);
-    
-    const userExist = await findMail(data.email)
-    if(userExist){
-        updateUser(userId, data)
-    }else{
-        createUser(data)
-    }
-}
 
 export async function updateUser(userId,data){
     const dataToUpdate = {
@@ -57,6 +47,14 @@ export async function updateUser(userId,data){
         await updatePassword(dataToUpdate.password,userId)
     }
     return dataToUpdate
+}
+
+export async function deleteUser(id){
+    return User.destroy({
+        where:{
+            id
+        }
+    })
 }
 
 

@@ -1,6 +1,6 @@
 import * as express from "express"
 import 'dotenv/config'
-import { createUser,findMail, getAllUsers, updateOrCreateUser} from "./controllers/users-controller"
+import { createUser,findMail, getAllUsers, updateUser,deleteUser} from "./controllers/users-controller"
 import { createReport, getReports, updateReport, sendPetInfo, lostPetsNear, deleteReport} from "./controllers/reports-controller"
 import { getAllPets } from "./controllers/pets-controllers"
 import {getToken} from "./controllers/auth-controller"
@@ -46,10 +46,15 @@ app.put("/update-user",bodyCheckMiddleware,authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
     console.log(req.body);
     
-    const update = await updateOrCreateUser(req.body, userId)
+    const update = await updateUser(req.body, userId)
     res.json(update)
 })
 
+app.delete("/user",async(req,res)=>{
+    const {userId} = req.query
+    const deletedReport = await deleteUser(userId)
+    res.json(deletedReport)
+})
 
 app.get("/me",authorizeMiddleware, async(req,res)=>{
     res.json({token:"valido"})
@@ -65,6 +70,7 @@ app.put("/report",bodyCheckMiddleware,async(req,res)=>{
     const updatedReport = await updateReport(reportId,req.body)
     res.json(updatedReport)
 })
+
 
 app.delete("/report",async(req,res)=>{
     const {reportId} = req.query

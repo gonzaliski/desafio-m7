@@ -43,6 +43,21 @@ export const state = {
           this.setState(cs)        
         return userRes
       },
+      async signUp(data){
+        console.log({...data});
+        const cs = this.getState()
+        const createdUser = await fetch(API_BASE_URL + "/auth",{
+          method:"post",
+          headers:{ "Content-Type": "application/json" },
+          body:JSON.stringify({
+            ...data
+          })
+        })
+        const newUser = await createdUser.json()
+        cs.fullName = data.fullName
+        this.setState(cs)
+        return newUser       
+      },
 
       async signIn(password:string){
         const cs = this.getState()
