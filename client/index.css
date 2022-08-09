@@ -10,7 +10,6 @@
 .root{
     height: 100%;
 }
-
-body{
-    min-height: 100vh;
+.mapboxgl-ctrl.mapboxgl-ctrl-attrib{
+    display:none;
 }

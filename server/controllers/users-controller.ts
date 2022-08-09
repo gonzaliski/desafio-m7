@@ -3,29 +3,25 @@ import { cloudinary } from "../lib/cloudinary";
 import { getSHA256ofString, updatePassword} from "./auth-controller"
 
 
-export async function authUser(data){
+export async function createUser(data){
     const {email, password,full_name} = data
-    const [ user, created] =  await User.findOrCreate({
-        where:{email},
-        defaults:{
+    const newUser =  await User.create({
             email,
             full_name,
-        }
     })
-    const [ auth, authCreated] = await Auth.findOrCreate({
-        where:{user_id:user.get("id")},
-        defaults:{
+    let userId = newUser.get("id")
+    const newAuthCreated = await Auth.create({
             email,
             password:getSHA256ofString(password),
-            user_id:user.get("id")
-        }})
-        return user
+            user_id:userId
+        })
+        return userId
 }
 
-export async function findMail(data){
+export async function findMail(email){
     return User.findOne({
         where:{
-            email:data.email
+            email
         }
     })
 }
@@ -34,16 +30,29 @@ export function getAllUsers(){
     return User.findAll({})
 }
 
+export async function updateOrCreateUser(data,userId?){
+    console.log(data);
+    
+    const userExist = await findMail(data.email)
+    if(userExist){
+        updateUser(userId, data)
+    }else{
+        createUser(data)
+    }
+}
+
 export async function updateUser(userId,data){
     const dataToUpdate = {
-        full_name:data.full_name,
+        full_name:data.fullName,
         password:data.password
     }
-    await User.update(dataToUpdate.full_name,{
-        where:{
-            id:userId
+    if(dataToUpdate.full_name){
+        await User.update({full_name:dataToUpdate.full_name},{
+            where:{
+                id:userId
+            }
+        })
         }
-    })
     if(dataToUpdate.password){
         await updatePassword(dataToUpdate.password,userId)
     }

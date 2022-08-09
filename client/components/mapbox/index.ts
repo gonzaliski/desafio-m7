@@ -7,7 +7,7 @@ customElements.define("mapbox-el", class MapboxElement extends HTMLElement{
         this.render()
     }
     render(){
-        this.innerHTML=`<div id="map" style="width: 100%; height: auto"></div>
+        this.innerHTML=`<div id="map" style="width: 100%; height:100vh"></div>
         `
         mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
         const map = new mapboxgl.Map({

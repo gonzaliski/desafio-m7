@@ -1,3 +1,5 @@
+import { Router } from "@vaadin/router"
+
 customElements.define("header-el", class HeaderElement extends HTMLElement{
     pawImageURL:string
     constructor(){
@@ -8,27 +10,39 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
     }
     addListeners() {
        const burger = this.querySelector(".burger-menu")
+       const paw = this.querySelector(".paw-img")
        const navMenu = this.querySelector(".nav-menu")
        burger.addEventListener("click",()=>{
         burger.classList.toggle("active")
         navMenu.classList.toggle("active")
+       })
+       paw.addEventListener("click",()=>{
+        Router.go("/home")
+       })
+       const navLink = this.querySelector(".nav-link")
+       navLink.addEventListener("click",()=>{
+        console.log(navLink.getAttribute("href"));
        })
     }
     render(){
         this.pawImageURL = require("url:../../assets/paw.png");
      this.innerHTML=`
       <nav class="nav-bar">
-      <img src=${this.pawImageURL}></img>
+      <img src=${this.pawImageURL} class="paw-img"></img>
       <ul class="nav-menu">
         <li class="nav-item">
-            <a href="#" class="nav-link">Mis datos</a>
+            <a class="nav-link" href="/myData" >Mis datos</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Mis mascotas reportadas</a>
+            <a class="nav-link" href="/myReportedPets" >Mis mascotas reportadas</a>
         
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Reportar mascota</a>
+            <a class="nav-link" href="/reportPet" >Reportar mascota</a>
+        
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nearPets" >Mascotas cerca</a>
         
         </li>
       </ul>
@@ -69,6 +83,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             align-items:center;
             justify-content:center;
             transition:0.3s;
+            box-shadow:0px 20px 25px -10px rgba(0,0,0,0.5);
         }
         @media(min-width:768px){
             .nav-menu{
@@ -85,6 +100,16 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         }
         .nav-menu.active{
             left:0;
+        }
+        .nav-link{
+            font-family:'Poppins';
+            text-decoration: none;
+            color:inherit;
+            font-weight:500;
+            transition:0.7s ease;
+        }
+        .nav-link:hover{
+            color:white;
         }
     `
 

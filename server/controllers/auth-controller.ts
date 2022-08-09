@@ -14,12 +14,17 @@ export async function getToken(data){
             password:hashedPassword
         }
     })
-    const token = jwt.sign({id:auth.get("user_id")},SECRET)
+    console.log(auth);
+    var token = null
+    if(auth){
+       token = jwt.sign({id:auth.get("user_id")},SECRET)
+    }
    return token
 }
 
 export async function updatePassword(newPass,userId){
-    return await Auth.update({password:newPass},{
+    const hashedPassword = getSHA256ofString(newPass)
+    return await Auth.update({password:hashedPassword},{
         where:{
             user_id:userId
         }

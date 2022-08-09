@@ -1,5 +1,5 @@
 import { Router } from "@vaadin/router";
-
+import { state} from "../../state"
 customElements.define("home-page", class HomePage extends HTMLElement{
   constructor() {
     super();
@@ -8,7 +8,9 @@ customElements.define("home-page", class HomePage extends HTMLElement{
     this.render()
   }
   addListeners(){
-    Router.go("/myData")
+    console.log(state.data);
+    
+    // Router.go("/checkEmail")
   }
 
   render(){
@@ -19,7 +21,14 @@ customElements.define("home-page", class HomePage extends HTMLElement{
     `
     const style = document.createElement("style")
     style.innerHTML = `
-
+    .map__container{
+      display:flex;
+      flex-flow:column;
+      height:100vh;
+    }
+    #map{
+      flex-grow:1;
+    }
     `
     this.appendChild(style)
      this.addListeners()
