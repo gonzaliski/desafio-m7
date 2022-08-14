@@ -1,5 +1,5 @@
 
-customElements.define("primary-button", class PrimaryButton extends HTMLElement{
+customElements.define("secondary-button", class SecondaryButton extends HTMLElement{
   shadow: ShadowRoot;
   constructor() {
     super();
@@ -15,23 +15,21 @@ customElements.define("primary-button", class PrimaryButton extends HTMLElement{
   render(){
     this.shadow.innerHTML=`
  
-          <button class="save-button">${this.textContent}</button>
+          <button class="second-button">${this.textContent}</button>
       
     `
     const style = document.createElement("style")
     style.innerHTML = `
-
-    .save-button{
+    .second-button{
         font-family:'Poppins';
         font-weight:bold;
         font-size:18px;
-        background-color: var(--secondary-color);
+        background-color: var(--tertiary-color);
         border-radius: 4px;
         width:100%;
         height:50px;
-        transition:0.7s ease;
     }
-    .save-button:hover{
+    .second-button:hover{
       color:white;
     }
     `

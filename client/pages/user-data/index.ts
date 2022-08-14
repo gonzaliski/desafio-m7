@@ -65,7 +65,7 @@ customElements.define("user-data", class UserData extends HTMLElement{
             </li>
                </li>
             </ul>
-            <primary-button >Guardar</primary-button>
+            <primary-button class="send-button" >Guardar</primary-button>
           </form>
         </div>
         </div>
@@ -126,6 +126,9 @@ customElements.define("user-data", class UserData extends HTMLElement{
             display: inline-block;
             text-align:left;
             margin-bottom:30px;
+        }
+        .send-button{
+          width:100%;
         }
 
       `

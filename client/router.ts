@@ -9,6 +9,8 @@ export function initRouter(rootEl:Element){
     {path: '/checkEmail', component:'check-page'},
     {path: '/myData', component:'user-data'},
     {path: '/password', component:'password-page'},
+    {path: '/reportPet', component:'report-pet-page'},
+    {path: '/myReportedPets', component:'my-reports'},
     
   ]);
   if (location.pathname === "/") {

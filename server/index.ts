@@ -1,8 +1,8 @@
 import * as express from "express"
 import 'dotenv/config'
 import { createUser,findMail, getAllUsers, updateUser,deleteUser} from "./controllers/users-controller"
-import { createReport, getReports, updateReport, sendPetInfo, lostPetsNear, deleteReport} from "./controllers/reports-controller"
-import { getAllPets } from "./controllers/pets-controllers"
+import { getReports, createReport, deleteReport} from "./controllers/reports-controller"
+import { getAllPets,lostPetsNear,createPet, updatePet,deletePet,userPets, reportFound } from "./controllers/pets-controllers"
 import {getToken} from "./controllers/auth-controller"
 import * as cors from "cors";
 import { authorizeMiddleware, bodyCheckMiddleware } from "./db/middlewares"
@@ -60,15 +60,36 @@ app.get("/me",authorizeMiddleware, async(req,res)=>{
     res.json({token:"valido"})
 })
 
+app.post("/new-pet",authorizeMiddleware,async(req,res)=>{
+    const {userId} = req.query
+    const newPet = await createPet(req.body,userId)
+    res.json(newPet)
+})
+app.get("/me/pets",authorizeMiddleware,async(req,res)=>{
+    const {userId} = req.query
+    const data = await userPets(userId)
+    res.json(data)
+})
+app.put("/update-pet",authorizeMiddleware,async(req,res)=>{
+    const {petId} = req.query
+    const data = await updatePet(req.body,petId)
+    res.json(data)
+})
+app.put("/pet-found",authorizeMiddleware,async(req,res)=>{
+    const {petId} = req.query
+    const data = await reportFound(petId)
+    res.json(data)
+})
+app.delete("/pet",authorizeMiddleware,async(req,res)=>{
+    const {petId} = req.query
+    const data = await deletePet(petId)
+    res.json(data)
+})
+
 app.post("/report",authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
     const newReport = await createReport(req.body,userId)
     res.json(newReport)
-})
-app.put("/report",bodyCheckMiddleware,async(req,res)=>{
-    const {reportId} = req.query
-    const updatedReport = await updateReport(reportId,req.body)
-    res.json(updatedReport)
 })
 
 
@@ -87,13 +108,7 @@ app.get("/all-pets",async(req,res)=>{
     res.json(allPets)
 })
 
-app.post("/report-pet-info", bodyCheckMiddleware,async(req,res)=>{
-    const {petId} = req.query
-    const sendedInfo = await sendPetInfo(petId, req.body) 
-    res.json(sendedInfo)
-})
-
-app.get("/pet-near-user", async(req, res) => {
+app.get("/pets-near-me", async(req, res) => {
     const {lat,lng} = req.query
     const hits = await lostPetsNear(lat,lng)
     res.json(hits);

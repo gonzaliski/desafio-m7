@@ -5,23 +5,38 @@ customElements.define("check-page", class CheckPage extends HTMLElement{
     super();
   }
   connectedCallback(){
+    console.log("check email page");
+    
     this.render()
   }
   addListeners(){
-    const formEl = this.querySelector(".form__container")
+    const buttonSubmit = this.querySelector(".submit-button")
+    const formEl = this.querySelector("#email-form")
+    buttonSubmit.addEventListener("click",(e)=>{
+      e.preventDefault();
+      formEl?.dispatchEvent(new Event("submit"))
+    })
     formEl.addEventListener("submit",async (e)=>{
       const cs = state.getState()
       e.preventDefault();
       const target = e.target as any;
+      if(!target["email"].value){
+        alert("Ingrese un email")
+      }else{
+
       console.log(target["email"].value);
       const emailExistRes = await state.processEmail(target["email"].value)
       if(emailExistRes!=null){
+        console.log("a");
         Router.go("/password")
       }else{
         cs.newUser = true;
+        state.setState(cs)
+        
         Router.go("/myData")
       }
       
+    }
       
     })
   }
@@ -35,12 +50,12 @@ customElements.define("check-page", class CheckPage extends HTMLElement{
       <div class="title__container">
       <h2>Ingresar</h2>
       </div>
-        <form id="data__form" class="form__container">
+        <form id="email-form" class="form__container">
           <div class="form-inputs">
             <label class="form-label">Email</label>
              <input class="form-input name" name="email" type="text"></input>
           </div>
-          <primary-button>Siguiente</primary-button>
+          <primary-button class="submit-button">Siguiente</primary-button>
         </form>
       </div>
       </div>
@@ -93,6 +108,9 @@ customElements.define("check-page", class CheckPage extends HTMLElement{
       display: inline-block;
       text-align:left;
       margin-bottom:30px;
+  }
+  .submit-button{
+    width:100%;
   }
 
     `

@@ -13,6 +13,8 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
        const burger = this.querySelector(".burger-menu")
        const paw = this.querySelector(".paw-img")
        const navMenu = this.querySelector(".nav-menu")
+       const logOutEl = this.querySelector(".log-out")
+       const nearPets = this.querySelector(".nav-link.near-pets")
        burger.addEventListener("click",()=>{
         burger.classList.toggle("active")
         navMenu.classList.toggle("active")
@@ -20,9 +22,16 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
        paw.addEventListener("click",()=>{
         Router.go("/home")
        })
-       const navLink = this.querySelector(".nav-link")
-       navLink.addEventListener("click",()=>{
-        console.log(navLink.getAttribute("href"));
+       nearPets.addEventListener("click",()=>{
+    
+        if(!(location.pathname == "/home")){
+            Router.go("/home")
+        }
+       })
+
+       logOutEl.addEventListener("click",()=>{
+        state.logOut()
+        location.reload()
        })
     }
     render(){
@@ -44,7 +53,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/nearPets" >Mascotas cerca</a>
+            <a class="nav-link near-pets" >Mascotas cerca</a>
         
         </li>
         <div class="user-info__container">
@@ -105,8 +114,11 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             }
         }
         .nav-menu.active{
+            position: absolute;
+            top: 70px;
             padding-top: 5%;
             left:0;
+            z-index: 9;
         }
         .nav-link{
             text-decoration:none;
@@ -119,7 +131,9 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         .nav-link:hover{
             color:white;
         }
-
+        .nav-link.near-pets{
+            cursor:pointer;
+        }
         .user-info__container{
             display:flex;
             flex-direction:column;
@@ -139,6 +153,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         .log-out{
             font-family:'Poppins';
             color:blue;
+            text-decoration:underline blue;
         }
         @media(min-width:768px){
             .log-out{

@@ -6,9 +6,8 @@ export class Report extends Model {}
 Report.init({
   // los atributos de nuestro modelo (las columnas)
   pet_name: DataTypes.STRING,
-  image_URL:DataTypes.STRING,
-  lat:DataTypes.FLOAT,
-  lng:DataTypes.FLOAT,
+  phone_number:DataTypes.INTEGER,
+  information:DataTypes.STRING
    
 }, {
   sequelize, // la conexión a la base

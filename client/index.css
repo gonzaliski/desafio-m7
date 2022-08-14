@@ -5,11 +5,21 @@
 
 :root{
     --main-color:#FF6868;
+    --secondary-color: #FF9DF5;
+    --tertiary-color:#97EA9F;
+    --found-color:#32a852;
+
 }
 
 .root{
     height: 100%;
 }
-.mapboxgl-ctrl.mapboxgl-ctrl-attrib{
+.popup-styling.mapboxgl-popup .mapboxgl-popup-content {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+   }
+/* .mapboxgl-ctrl.mapboxgl-ctrl-attrib{
     display:none;
-}
+} */

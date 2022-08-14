@@ -1,8 +1,11 @@
+
+
 const API_BASE_URL = "http://localhost:3004"
 
 
 export const state = {
     data:{
+      userPets:[]
     },
     listeners:[],
     subscribe(callback: (any) => any) {
@@ -12,11 +15,20 @@ export const state = {
      getState() {
         return this.data;
       },
+      init(){
+        const retrievedData = JSON.parse(localStorage.getItem("data"))
+        if(!retrievedData){
+          return
+        }
+        else{
+          this.setState(retrievedData)
 
+        }
+      },
       setState(newState) {
         // modifica this.data (el state) e invoca los callbacks
         console.log(newState);
-        
+        localStorage.setItem("data",JSON.stringify(newState))
         this.data = newState;
           for (const cb of this.listeners) {
             cb();
@@ -98,5 +110,88 @@ export const state = {
         console.log(newData);
         
 
+      },
+      async reportPet(data){
+        const cs = this.getState()
+        const createPet = await fetch(API_BASE_URL + "/new-pet" + "?userId=" + cs.userId,{
+          method:"post",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: `bearer ${cs.token}`,
+          },
+          body:JSON.stringify(data)
+        })
+        const newPet = await createPet.json()
+        console.log(newPet);
+        return newPet
+      },
+      async updatePet(data){
+        const cs = this.getState()
+        const updatePet = await fetch(API_BASE_URL + "/update-pet" + "?petId=" + cs.petToEdit.id,{
+          method:"put",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: `bearer ${cs.token}`,
+          },
+          body:JSON.stringify(data)
+        })
+        const updatePetRes = await updatePet.json()
+        console.log(updatePetRes);
+        return updatePetRes
+      },
+      currentMarkerPosition(lat, lng){
+        const cs = this.getState()
+        cs.petToReportLat = lat
+        cs.petToReportLng = lng
+        this.setState(cs)
+      },
+
+      async getMyPets(){
+        const cs = this.getState()
+        const myPets = await fetch(API_BASE_URL + "/me/pets" + "?userId=" + cs.userId,
+        {
+          method:"get",
+          headers:{
+          "Content-Type": "application/json",
+          Authorization: `bearer ${cs.token}`,
+        }})
+        const petsToJson = await myPets.json()
+        return petsToJson
+      },
+      async reportFound(petId){
+        const cs = this.getState()
+        const reportPetFound = await fetch(API_BASE_URL + "/pet-found" + "?petId=" + petId,{
+          method:"put",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: `bearer ${cs.token}`,
+          } })
+        const updatePetRes = await reportPetFound.json()
+        return updatePetRes
+      },
+      
+      async deletePet(petId){
+        const cs = this.getState()
+        const deletePet = await fetch(API_BASE_URL + "/pet" + "?petId=" + petId,{
+          method:"delete",
+          headers:{
+            "Content-Type": "application/json",
+            Authorization: `bearer ${cs.token}`,
+          } })
+        const deletePetRes = await deletePet.json()
+        return deletePetRes
+      },
+      async nearPets(){
+        const cs = this.getState()
+        const getNearPets = await fetch(API_BASE_URL + "/pets-near-me" + "?lat="+ cs.lat + "&lng=" + cs.lng,{
+          method:"get",
+          headers:{
+          "Content-Type": "application/json"
+                }})
+        const petsToJson = await getNearPets.json()
+        return petsToJson
+      },
+      logOut(){
+        this.setState({})
       }
 }

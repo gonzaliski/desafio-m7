@@ -5,13 +5,30 @@ customElements.define("password-page", class PasswordPage extends HTMLElement{
     super();
   }
   connectedCallback(){
+    const cs = state.getState()
+    console.log("new user:", cs.newUser);
+    console.log("cs.activeSession:", cs.activeSession);
+    
+    if(!cs.activeSession && !cs.newUser && !cs.email){
+      console.log("going to email check");
+      
+      Router.go("/checkEmail")
+    }
     this.render()
   }
   addListeners(){
+    const buttonSubmit = this.querySelector(".submit-button")
     const formEl = this.querySelector(".password__form")
+    buttonSubmit.addEventListener("click",(e)=>{
+      e.preventDefault();
+      formEl?.dispatchEvent(new Event("submit"))
+    })
     formEl.addEventListener("submit",async (e)=>{
       e.preventDefault();
       const target = e.target as any;
+      if(!target["password"].value){
+        alert("Ingrese una contraseña")
+      }
       const cs = state.getState()
       console.log(target["password"].value);
         const token = await state.signIn(target["password"].value)
@@ -19,6 +36,7 @@ customElements.define("password-page", class PasswordPage extends HTMLElement{
             cs.token = token
             cs.activeSession = true
             state.setState(cs)
+            
             Router.go("/home")
         }else{
             alert("Contraseña incorrecta, intente de nuevo")
@@ -42,7 +60,7 @@ customElements.define("password-page", class PasswordPage extends HTMLElement{
             <label class="form-label">Contraseña</label>
              <input class="form-input name" name="password" type="password"></input>
           </div>
-          <primary-button>Siguiente</primary-button>
+          <primary-button class="submit-button">Siguiente</primary-button>
         </form>
       </div>
       </div>
@@ -96,7 +114,9 @@ customElements.define("password-page", class PasswordPage extends HTMLElement{
       text-align:left;
       margin-bottom:30px;
   }
-
+  .submit-button{
+    width:100%;
+  }
     `
     this.appendChild(style)
      this.addListeners()
