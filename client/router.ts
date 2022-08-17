@@ -1,4 +1,4 @@
-const Router = require("@vaadin/router")
+import { Router } from "@vaadin/router"
 export function initRouter(rootEl:Element){
 
   const router = new Router(rootEl);

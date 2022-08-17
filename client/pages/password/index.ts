@@ -1,4 +1,4 @@
-const Router = require("@vaadin/router")
+import { Router } from "@vaadin/router"
 import {state} from "../../state"
 customElements.define("password-page", class PasswordPage extends HTMLElement{
   constructor() {

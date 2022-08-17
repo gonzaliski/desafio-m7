@@ -1,4 +1,4 @@
-const Router = require("@vaadin/router")
+import { Router } from "@vaadin/router"
 import { state } from "../../state"
 
 customElements.define("header-el", class HeaderElement extends HTMLElement{
@@ -96,7 +96,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             display:flex;
             align-items:center;
             gap:5px;
-            cursor:pointer;
+            cursor:pointe
         }
         @media(min-width:768px){
             .logo-container{

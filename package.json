@@ -2,9 +2,6 @@
   "name": "pet-finder-app",
   "version": "1.0.0",
   "license": "MIT",
-  "engines": {
-    "node": "16.x"
-  },
   "scripts": {
     "dev:api": "nodemon --watch server/**/* -e ts --exec ts-node ./server/index.ts",
     "dev:fe": "parcel serve ./client/index.html",
