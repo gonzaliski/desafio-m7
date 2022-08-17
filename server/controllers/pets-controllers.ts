@@ -3,12 +3,10 @@ import { Report, Pet, User} from "../db/models"
 import { index } from "../lib/algolia"
 
 
- async function saveLocationOnAlgolia(data,petId){
+ async function saveLocationOnAlgolia(data){
    try{ 
     const algoliaRes = await index.saveObject({
-        objectID:petId,
-        name:data.name,
-        imageURL:data.image_URL,
+        objectID:data.petId,
         _geoloc:{
             lat:data.lat,
             lng:data.lng
@@ -20,15 +18,15 @@ import { index } from "../lib/algolia"
     }
 }
 
+async function deletePetOnAlgolia(petId){
+  index.deleteObject(petId).then(()=>{
+    console.log("deleted on algolia");
+    
+  })
+}
+
 function dataToIndex(data, id?) {
     const res: any = {};
-    if (data.petName) {
-      res.name = data.petName;
-    }
-    if(data.imageURL){
-      res.imageURL = data.imageURL
-    }
-
     if (data.lat && data.lng) {
       res._geoloc = { lat: data.lat, lng: data.lng };
     }
@@ -71,13 +69,19 @@ export async function createPet(data,userId){
           lng:data.lng,
           found:false,
           image_URL:petImageURL,
+          zone:data.locationName,
           userId
         }
 
     const createdPet = await Pet.create({
        ...petData
     })
-    let algoliaRes =  await saveLocationOnAlgolia(petData,createdPet.get("id"))
+    let algoliaRes =  await saveLocationOnAlgolia(
+      {
+      lat:petData.lat,
+      lng:petData.lng,
+      petId:createdPet.get("id")
+    })
 
     return createdPet
 }
@@ -121,26 +125,27 @@ export async function getAllPets(){
     return  Pet.findAll({})
 }
 
+export async function getAllPetsWithIds(ids:Array<Number | String>){
+  return Pet.findAll({
+    where:{id:ids}
+  })
+}
+
+
 export async function lostPetsNear(lat,lng) {
     const {hits} = await index.search("",{
          aroundLatLng:`${lat}, ${lng}`,
          aroundRadius:100000
        })
      const processedHits = processHits(hits)
-     console.log(processedHits);
-     return processedHits
+     console.log("LOS HITSSS", processedHits);
+     
+     const nearPetsRes = await getAllPetsWithIds(processedHits)
+     return nearPetsRes
  }
  function processHits(hits){
      const res = hits.map((h)=>{
-         return {
-           id:h.objectID,
-           name:h.name,
-           imageURL:h.imageURL,
-           _geoloc:{
-             lat:h._geoloc.lat,
-             lng:h._geoloc.lng
-           }
-         }
+         return h.objectID
        })
      
        return res
@@ -154,6 +159,7 @@ export async function reportFound(id){
   return petWasFound  
 }
      export async function deletePet(id){
+      await deletePetOnAlgolia(id)
       return Pet.destroy({
           where:{
               id

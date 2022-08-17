@@ -10,8 +10,9 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         this.render()
     }
     addListeners() {
+        const cs = state.getState()
        const burger = this.querySelector(".burger-menu")
-       const paw = this.querySelector(".paw-img")
+       const logo = this.querySelector(".logo-container")
        const navMenu = this.querySelector(".nav-menu")
        const logOutEl = this.querySelector(".log-out")
        const nearPets = this.querySelector(".nav-link.near-pets")
@@ -21,7 +22,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         burger.classList.toggle("active")
         navMenu.classList.toggle("active")
        })
-       paw.addEventListener("click",()=>{
+       logo.addEventListener("click",()=>{
         Router.go("/home")
        })
        nearPets.addEventListener("click",()=>{
@@ -31,9 +32,11 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         }
        })
        userButton.addEventListener("click",()=>{
-        console.log("a");
-        
-        userMenu.classList.toggle("active")
+        if(!cs.activeSession){
+            Router.go("/checkEmail")
+        }else{
+            userMenu.classList.toggle("active")
+        }
        })
         logOutEl.addEventListener("click",()=>{
             state.logOut()
@@ -45,7 +48,10 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         this.pawImageURL = require("url:../../assets/paw.png");
      this.innerHTML=`
       <nav class="nav-bar">
-      <img src=${this.pawImageURL} class="paw-img"></img>
+      <div class="logo-container">
+        <img src=${this.pawImageURL} class="logo-img"></img>
+        <h2 class="logo-title">Pet Finder</h2>
+      </div>
       <ul class="nav-menu">
         <li class="nav-item">
             <a class="nav-link" href="/myData" >Mis datos</a>
@@ -78,12 +84,26 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
     const style = document.createElement("style")
     style.innerHTML= `
         .nav-bar{
+            font-family:'Poppins';
             background-color: var(--main-color);
             display:flex;
             align-items:center;
             justify-content:space-between;
             padding:20px 14px 20px 14px;
+            height:74px;
         }   
+        .logo-container{
+            display:flex;
+            align-items:center;
+            gap:5px;
+            cursor:pointer;
+        }
+        @media(min-width:768px){
+            .logo-container{
+                gap:10px;
+            }
+        }
+        
         .line{
             background-color:black;
             height:5px;
@@ -149,7 +169,6 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
         }
         .nav-link{
             text-decoration:none;
-            font-family:'Poppins';
             text-decoration: none;
             color:inherit;
             font-weight:500;
@@ -176,13 +195,8 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             margin-top:10px;
             padding-bottom:10px;
         }
-        .user-name__display{
-            font-family:'Poppins';
-           
-        }
       
         .log-out{
-            font-family:'Poppins';
             color:blue;
             text-decoration:underline blue;
             cursor:pointer;
@@ -195,11 +209,11 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             right:0;
             z-index: 9;
         }
-        @media(max-width:768px){
-            .user-info__container.menu.active {
-                
-            }
+     
+        .nav-link.user:active{
+            color:white;
         }
+     
        
         
 

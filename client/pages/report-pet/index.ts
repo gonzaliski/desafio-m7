@@ -19,6 +19,7 @@ customElements.define(
       if(!cs.activeSession && !cs.newUser){
         Router.go("/checkEmail")
       }
+      
       this.render();
     }
     addListeners() {
@@ -30,6 +31,7 @@ customElements.define(
       const mapboxButton = this.querySelector(".mapbox-button");
       
       const petNameInput = this.querySelector(".pet-name__input");
+      const locationInput = this.querySelector(".location-input");
       
       const dropzoneImage: any = this.querySelector(".report-dropzone__img");
       const dropzoneButton = this.querySelector(".dropzone-button");
@@ -39,8 +41,9 @@ customElements.define(
       if(cs.editMode){
         const foundButton = this.querySelector(".founded-button")
         const overridePetName = petNameInput.shadowRoot.querySelector("input")
+        const overrideLocation = locationInput.shadowRoot.querySelector("input")
         overridePetName.value = cs.petToEdit.name
-
+        overrideLocation.value = cs.petToEdit.locationName
         reportButton.shadowRoot.querySelector("button").textContent = "Guardar"
         foundButton.className+=" active"
         const foundButtonActive = this.querySelector(".founded-button.active")
@@ -49,9 +52,10 @@ customElements.define(
           Router.go("/myReportedPets")
         })
         unpublishButton.addEventListener("click",()=>{
-          state.deletePet(cs.petToEdit.id)
-          alert("Reporte despublicado")
-          Router.go("/myReportedPets")
+          state.deletePet(cs.petToEdit.id).then(()=>{
+            alert("Reporte despublicado")
+            Router.go("/myReportedPets")
+          })
 
         })
       }
@@ -127,21 +131,25 @@ customElements.define(
           alert("Falta la ubicacion de la mascota")
         }
         if(cs.editMode){
-          state.updatePet(petData)
-          cs.editMode = false
-          cs.petToEdit =""
-          state.setState(cs)
-          alert("Mascota Actualizada")
-          Router.go("/myReportedPets")
+          state.updatePet(petData).then(()=>{
+            cs.editMode = false
+            cs.petToEdit =""
+            state.setState(cs)
+            alert("Mascota Actualizada")
+            Router.go("/myReportedPets")
+          })
         }else if (petData.petName && petData.imageURL && 
           petData.lat && petData.lng && petData.locationName){
 
-          state.reportPet(petData)
-          alert("Mascota Reportada")
-          Router.go("/myReportedPets")
+          state.reportPet(petData).then(()=>{
+            alert("Mascota Reportada")
+            Router.go("/myReportedPets")
+          })
         }
       })
       cancelButton.addEventListener("click",()=>{
+        cs.editMode = false
+        cs.petToEdit =""
         Router.go("/home")
       })
       
@@ -191,7 +199,7 @@ customElements.define(
           <primary-button class="report-button">Reportar como perdido</primary-button>
           <secondary-button class="founded-button">Reportar como encontrado</secondary-button>
           <border-button class="cancel-button">Cancelar</border-button>
-          <a class=${cs.editMode? "unpublish-pet__link active": "unpublish-pet__link"}>Despublicar</a>
+          <a class="${cs.editMode? "unpublish-pet__link active": "unpublish-pet__link"}">Despublicar</a>
 
         </div>
       </div>
@@ -303,7 +311,7 @@ customElements.define(
     .unpublish-pet__link{
       display:none;
     }
-    .unpublish-pet__link{
+    .unpublish-pet__link.active{
       display:inline;
       text-decoration: underline;
       cursor:pointer;

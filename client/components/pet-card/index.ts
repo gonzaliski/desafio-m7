@@ -89,7 +89,7 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
             <div class="text-container">
               <div>
                 <h3 class="pet-name__title">${this.name}</h3>
-                <h5 class="pet-name__title">${this.locationName}</h5>
+                <h5 class="pet-name__title">${this.locationName.toUpperCase()}</h5>
               </div>
             <img src=${editButton} class="edit-button"></img>
             <a class="report-pet-info">Reportar información</a>

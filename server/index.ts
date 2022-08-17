@@ -1,6 +1,6 @@
 import * as express from "express"
 import 'dotenv/config'
-import { createUser,findMail, getAllUsers, updateUser,deleteUser} from "./controllers/users-controller"
+import { createUser,findMail, updateUser,deleteUser} from "./controllers/users-controller"
 import { getReports, createReport} from "./controllers/reports-controller"
 import { getAllPets,lostPetsNear,createPet, updatePet,deletePet,userPets, reportFound } from "./controllers/pets-controllers"
 import {getToken} from "./controllers/auth-controller"
@@ -33,10 +33,6 @@ app.post("/auth/token",bodyCheckMiddleware, async(req,res)=>{
     res.json(token)
 })
 
-app.get("/all-users",async(req,res)=>{
-    const allUsers = await getAllUsers()
-    res.json(allUsers)
-})
 
 app.put("/update-user",bodyCheckMiddleware,authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
@@ -109,4 +105,6 @@ app.get("/pets-near-me", async(req, res) => {
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
   });
+
+
 

@@ -161,17 +161,9 @@ export const state = {
           Authorization: `bearer ${cs.token}`,
         }})
         let petsToJson = await myPets.json()
-        let petsToList = map(petsToJson)
-        let petsProcessed = petsToList.map(pet=>{return {
-          id: pet.id,
-          name: pet.name,
-          imageURL:pet.image_URL,
-          found:pet.found,
-          lat:pet.lat,
-          lng:pet.lng,
-          locationName:pet.zone
-        }})
-        return petsProcessed
+        
+        let petsToList = this.processPets(petsToJson)
+        return petsToList
       },
       async reportFound(petId){
         const cs = this.getState()
@@ -187,6 +179,9 @@ export const state = {
       
       async deletePet(petId){
         const cs = this.getState()
+        let index = cs.userPets.indexOf(cs.userPets.find((pet)=>{return pet.id == petId}))
+        cs.userPets.splice(index,1)
+        this.setState(cs)
         const deletePet = await fetch(API_BASE_URL + "/pet" + "?petId=" + petId,{
           method:"delete",
           headers:{
@@ -204,7 +199,8 @@ export const state = {
           "Content-Type": "application/json"
                 }})
         const petsToJson = await getNearPets.json()
-        return petsToJson
+        const petsToList = this.processPets(petsToJson)
+        return petsToList
       },
       async reportInfo(info,id){
         const reportPetInfo = await fetch(API_BASE_URL + "/report" + "?petId=" + id,{
@@ -215,6 +211,21 @@ export const state = {
           body:JSON.stringify(info)})
         return reportPetInfo
       },
+
+      processPets(dataToProcess){
+        let petsToList = map(dataToProcess)
+        let petsProcessed = petsToList.map(pet=>{return {
+          id: pet.id,
+          name: pet.name,
+          imageURL:pet.image_URL,
+          found:pet.found,
+          lat:pet.lat,
+          lng:pet.lng,
+          locationName:pet.zone
+        }})
+        return petsProcessed
+      },
+      
       logOut(){
         this.setState({})
       }

@@ -15,10 +15,13 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
   async addListeners(){
     const cs = state.getState()
     const petsContainer = this.querySelector(".pets-container")
-    const titleContainer = this.querySelector(".title__container")
+    const titleContainer = this.querySelector(".title-container")
+    console.log(titleContainer);
+    
     const pets = await state.getMyPets()
-    if(pets){
-
+    
+    if(pets.length > 0){
+      
         pets.forEach((pet)=>{
             const petCard = document.createElement("pet-card")
             petCard.setAttribute("name",pet.name)
@@ -26,15 +29,18 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
             petCard.setAttribute("id",(pet.id).toString())
             petCard.setAttribute("found",pet.found)
             petCard.setAttribute("reportable","false")
+            petCard.setAttribute("location",pet.locationName)
             
             cs.userPets = pets
             petsContainer.appendChild(petCard)
         })
         state.setState(cs)
       }else{
-        let noPetsEl = document.createElement("h3")
-        noPetsEl.textContent="Aún no tenes mascotas reportadas"
-        titleContainer.appendChild(noPetsEl)
+        let noPetsEl = document.createElement("div")
+        noPetsEl.className = "no-pets__title"
+        noPetsEl.innerHTML=`<h3>Aún no tenes mascotas reportadas</h3>`
+        console.log(noPetsEl);
+        petsContainer.appendChild(noPetsEl)
       }
   }
 
@@ -44,7 +50,7 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
       <header-el></header-el>
       <section class="report-pet-info__container">
       <div class="content">
-      <div class="title__container">
+      <div class="title-container">
       <h2>Mis mascotas reportadas</h2>
       </div>
       <div class="pets-container"></div>
@@ -68,7 +74,7 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
       align-items:center;
       gap:20px;
    }
-   .title__container{
+   .title-container{
       width:100%;
       display: inline-block;
       text-align:center;
@@ -79,6 +85,10 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
     flex-direction:column;
     align-items:center;
     gap:20px;
+  }
+  .no-pets__title{
+    font-weight:400;
+    color:grey;
   }
   .report-pet-info__container{
     font-family: 'Poppins';

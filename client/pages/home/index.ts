@@ -59,7 +59,8 @@ customElements.define("home-page", class HomePage extends HTMLElement{
           state.setState(cs)
        
 
-        state.nearPets().then(async (pets)=>{
+        state.nearPets().then(async (petsRes)=>{
+          const pets =  petsRes.filter((p)=>{return p.found == false})
           console.log(pets);
           //esta variable permite obtener las mascotas del usuario por su id, asi luego podremos determinar si el usuario las
           //puede reportar(si no fue él quien las reportó)
@@ -75,8 +76,8 @@ customElements.define("home-page", class HomePage extends HTMLElement{
           console.log(userPetsbyId, "userpetsbyid");
           
           pets.forEach(pet => {
-            
-            const {lat,lng} = pet._geoloc
+            const lat = pet.lat
+            const lng = pet.lng
             const popup = new mapboxgl.Popup({
               offset: 25
             }).setHTML(`<h4 class="pet__popup-title">${pet.name}</h4>`);
@@ -84,8 +85,8 @@ customElements.define("home-page", class HomePage extends HTMLElement{
             popup.on("open", () => {
               const petEl = document.createElement("div")
               petEl.innerHTML =`<pet-card class="pet-card popup-open" name=${pet.name} source=${pet.imageURL} id=${pet.id}
-              reportable=${userPetsbyId ? (userPetsbyId.includes(pet.id) ? "false" : "true") : "true"}
-              location=${pet.locationName}></pet-card>`
+              reportable=${userPetsbyId ? (userPetsbyId.includes((pet.id).toString()) ? "false" : "true") : "true"}
+              location="${pet.locationName}"></pet-card>`
               petEl.className="pet-el__container"
 
               petEl.addEventListener("report",(e:any)=>{

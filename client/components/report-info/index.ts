@@ -80,7 +80,11 @@ customElements.define(
             background-color: white;
             
           }
-        
+          @media(min-width:768px){
+            .content{
+              padding: 10% 40%;
+            }
+          }
           .form__container{
               width:100%;
               height:100%;
