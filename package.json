@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "@types/node": "^18.7.6",
     "@vaadin/router": "^1.7.4",
     "algoliasearch": "^4.14.2",
     "cloudinary": "^1.30.1",
