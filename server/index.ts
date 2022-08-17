@@ -1,7 +1,7 @@
 import * as express from "express"
 import 'dotenv/config'
 import { createUser,findMail, getAllUsers, updateUser,deleteUser} from "./controllers/users-controller"
-import { getReports, createReport, deleteReport} from "./controllers/reports-controller"
+import { getReports, createReport} from "./controllers/reports-controller"
 import { getAllPets,lostPetsNear,createPet, updatePet,deletePet,userPets, reportFound } from "./controllers/pets-controllers"
 import {getToken} from "./controllers/auth-controller"
 import * as cors from "cors";
@@ -15,12 +15,8 @@ app.use(express.json({
   app.use(cors());
 const port = process.env.PORT || 3004
 //sign up
-app.post("/auth", async(req,res)=>{
-    if(!req.body){
-        res.status(400).json({
-            message:"There is missing data in the body"
-        })
-    }
+app.post("/auth", bodyCheckMiddleware,async(req,res)=>{
+    
     const user = await createUser(req.body)
 
     res.json(user)
@@ -86,18 +82,13 @@ app.delete("/pet",authorizeMiddleware,async(req,res)=>{
     res.json(data)
 })
 
-app.post("/report",authorizeMiddleware,async(req,res)=>{
-    const {userId} = req.query
-    const newReport = await createReport(req.body,userId)
+app.post("/report",async(req,res)=>{
+    const {petId} = req.query
+    const newReport = await createReport(petId,req.body)
     res.json(newReport)
 })
 
 
-app.delete("/report",async(req,res)=>{
-    const {reportId} = req.query
-    const deletedReport = await deleteReport(reportId)
-    res.json(deletedReport)
-})
 
 app.get("/all-reports",async(req,res)=>{
     const reports = await getReports()

@@ -7,6 +7,7 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
     petId:string;
     reportable:string;
     found:string;
+    locationName:string;
     constructor(){
         super()
     }
@@ -16,6 +17,7 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
         this.petId = this.getAttribute("id")
         this.found = this.getAttribute("found") 
         this.reportable = this.getAttribute("reportable") || "true"
+        this.locationName = this.getAttribute("location") || "Sin detalle del lugar"
         
         this.render()
     }
@@ -27,22 +29,29 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
         const foundTittle = this.querySelector(".found-title")
         const deletePetLink = this.querySelector(".delete-pet__link")
         const cs = state.getState()
-        
+        const petId = this.petId
+        const petName = this.name
         if(this.reportable == "false"){
             reportButton.className+=' no-report'
             editButton.className+=' no-report'
             textContainer.className+=' no-report'
          
-            editButton.addEventListener("click",()=>{
-                let reqPet = cs.userPets.find(p=>p.id == this.petId)
+          }
+          editButton.addEventListener("click",async ()=>{
+              let reqPet
+              if(!cs.pets){
+                let pets = await state.getMyPets()
+                reqPet = pets.find(p=>p.id == this.petId)
+              }else{
+                reqPet = cs.userPets.find(p=>p.id == this.petId)
+              }
                 console.log(reqPet, this.petId);
-                
-                cs.petToEdit = reqPet
-                cs.editMode = true
-                state.setState(cs)
-                Router.go("/reportPet")
-            })
-        }
+              
+              cs.petToEdit = reqPet
+              cs.editMode = true
+              state.setState(cs)
+              Router.go("/reportPet")
+          })
         if(this.found == "true"){
             this.reportable = "false"
             container.className+=" found"
@@ -56,6 +65,21 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
                 location.reload()
             })
         }
+        reportButton.addEventListener("click",()=>{
+          console.log(petId, "petId");
+          this.dispatchEvent(
+            
+            new CustomEvent("report", {
+              detail: {
+                petId,
+                petName
+              },
+              bubbles: true
+              // esto hace que el evento pueda
+              // ser escuchado desde un elemento
+              // que está más "arriba" en el arbol
+            }))
+        })
         }
 
     render(){
@@ -63,7 +87,10 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
         <div class="card-container">
             <img class="pet-img" src=${this.source}></img>
             <div class="text-container">
-            <h3 class="pet-name__title">${this.name}</h3>
+              <div>
+                <h3 class="pet-name__title">${this.name}</h3>
+                <h5 class="pet-name__title">${this.locationName}</h5>
+              </div>
             <img src=${editButton} class="edit-button"></img>
             <a class="report-pet-info">Reportar información</a>
             <h3 class="found-title">Encontrado!</h3>
@@ -98,7 +125,11 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
             display:flex;
             justify-content:space-between;
           }
-
+          .report-pet-info{
+            text-decoration:underline;
+            color:blue;
+            cursor:pointer;
+          }
           .report-pet-info.no-report{
             display:none;
           }
@@ -108,6 +139,7 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
           .edit-button.no-report{
             display:inline;
             height:24px;
+            cursor:pointer;
           }
           .found-title{
             display:none;
@@ -123,6 +155,7 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
             margin:10px;
             display:inline;
             text-decoration: underline;
+            cursor:pointer;
           }
         `
         this.appendChild(style)

@@ -1,6 +1,6 @@
 import { Router } from "@vaadin/router";
 import {state} from "../../state"
-import {map} from "lodash"
+
 customElements.define("my-reports", class MyReportsPage extends HTMLElement{
   constructor() {
     super();
@@ -16,21 +16,9 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
     const cs = state.getState()
     const petsContainer = this.querySelector(".pets-container")
     const titleContainer = this.querySelector(".title__container")
-    const getPets = await state.getMyPets()
-    if(getPets){
-    const petsToList = map(getPets)
-    console.log(getPets);
-        let pets = petsToList.map(pet=>{return {
-          id: pet.id,
-          name: pet.name,
-          imageURL:pet.image_URL,
-          found:pet.found,
-          lat:pet.lat,
-          lng:pet.lng
-        }})
-        console.log("pets", pets);
-        
-        
+    const pets = await state.getMyPets()
+    if(pets){
+
         pets.forEach((pet)=>{
             const petCard = document.createElement("pet-card")
             petCard.setAttribute("name",pet.name)

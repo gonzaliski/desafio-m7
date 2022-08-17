@@ -3,7 +3,6 @@ import { state} from "../../state"
 import mapboxgl from 'mapbox-gl';
 import "mapbox-gl/dist/mapbox-gl.css";
 import { initMapboxGlobe } from "../../lib/mapbox";
-import { LogOutput } from "concurrently";
 customElements.define("home-page", class HomePage extends HTMLElement{
   constructor() {
     super();
@@ -14,13 +13,13 @@ customElements.define("home-page", class HomePage extends HTMLElement{
   addListeners(){
     console.log(state.data);
     
-    // Router.go("/checkEmail")
   }
 
   async render(){
     
     this.innerHTML=`
       <header-el></header-el>
+      <div class="report-pet-info__container"></div>
       <div class="pets-container"></div>
       <div class="mapbox-globe-el" style="width: 100%; height:calc(100vh - 74px)"></div>
 
@@ -28,7 +27,10 @@ customElements.define("home-page", class HomePage extends HTMLElement{
     const cs = state.getState()
     const petContainerEl = this.querySelector(".pets-container")
     const mapDiv = this.querySelector(".mapbox-globe-el")
+    const reportPetInfo = this.querySelector(".report-pet-info__container")
+    //inicia mapbox como globe
       const map = await initMapboxGlobe(mapDiv)
+      
       const geolocate = new mapboxgl.GeolocateControl({
         positionOptions: {
         enableHighAccuracy: true
@@ -36,18 +38,18 @@ customElements.define("home-page", class HomePage extends HTMLElement{
         trackUserLocation: true,
         showUserHeading: true
         })
+        //añade el boton para obtener la ubicacion del usuario y centrar el mapa en ella
       map.addControl(geolocate);
         
       const locatorButtonContainer = document.querySelector(".mapboxgl-ctrl-top-right")
       const locatorButton = document.querySelector(".mapboxgl-ctrl.mapboxgl-ctrl-group")
-      console.log(locatorButton);
       const locatorTittle = document.createElement("h3")
       locatorTittle.textContent = "Mi ubicación"
       locatorTittle.className = "locator-tittle"
       locatorButtonContainer.appendChild(locatorTittle)
       
       
-
+    //funcionalidade que se triggerean al tocar el boton de localizacion
       locatorButtonContainer.addEventListener("click",(e)=>{
         e.preventDefault()
         navigator.geolocation.getCurrentPosition((position:GeolocationPosition)=>{
@@ -55,49 +57,69 @@ customElements.define("home-page", class HomePage extends HTMLElement{
           cs.lat = position.coords.latitude
           cs.lng = position.coords.longitude
           state.setState(cs)
-        })
+       
 
-        state.nearPets().then((pets)=>{
+        state.nearPets().then(async (pets)=>{
           console.log(pets);
-          let userPetsbyId = cs.userPets.map((p)=>{p.id})
+          //esta variable permite obtener las mascotas del usuario por su id, asi luego podremos determinar si el usuario las
+          //puede reportar(si no fue él quien las reportó)
+          let userPetsbyId 
+            if(cs.userPets){
+              userPetsbyId = cs.userPets.map((p)=>{return p.id.toString()})
+            }else if(cs.activeSession){
+              let getPets  = await state.getMyPets()
+              let petsById = getPets.map((p)=>{return p.id.toString()})
+              userPetsbyId =  petsById
+            }
+          
+          console.log(userPetsbyId, "userpetsbyid");
+          
           pets.forEach(pet => {
+            
             const {lat,lng} = pet._geoloc
             const popup = new mapboxgl.Popup({
-              offset: 25,
-              className: "popup-styling",
+              offset: 25
             }).setHTML(`<h4 class="pet__popup-title">${pet.name}</h4>`);
-            
+            //al momento que se abre el popup se mostrará la mascota 
             popup.on("open", () => {
               const petEl = document.createElement("div")
-              console.log("pet card ");
-              
-              petEl.innerHTML =`<pet-card class="pet-card popup" name=${pet.name} source=${pet.imageURL} id=${pet.Id}
-              reportable=${userPetsbyId.includes(pet.id) ? "false" : pet.id}></pet-card>`
+              petEl.innerHTML =`<pet-card class="pet-card popup-open" name=${pet.name} source=${pet.imageURL} id=${pet.id}
+              reportable=${userPetsbyId ? (userPetsbyId.includes(pet.id) ? "false" : "true") : "true"}
+              location=${pet.locationName}></pet-card>`
               petEl.className="pet-el__container"
+
+              petEl.addEventListener("report",(e:any)=>{
+                console.log("reportando..",e.detail);
+                const reportInfoEl = document.createElement("report-info")
+                reportInfoEl.setAttribute("id", e.detail.petId) 
+                reportInfoEl.setAttribute("name", e.detail.petName) 
+                reportPetInfo.appendChild(reportInfoEl)
+              })
               petContainerEl.appendChild(petEl);
             });
-            // const popup = new mapboxgl.Popup({ closeOnClick: false })
-            // .setLngLat([lng, lat])
-            // .setHTML(`<pet-card name=${pet.name} source=${pet.imageURL} id=${pet.Id}
-            // reportable=${userPetsbyId.includes(pet.id) ? "false" : pet.id}></pet-card>`)
-            // .addTo(map);
+            //cuando se cierra el popup se borra la tarjeta 
             popup.on("close", () => {
               const div = this.querySelector(
                 ".pet-el__container"
-              ) as any;
-              console.log(div);
-              
+              );
+              console.log("div",div);
               if (div) {
+                const petElToClose = div.querySelector(
+                  ".pet-card.popup-open"
+                );
+                
+                petElToClose.className="pet-card popup-close"
                 div.remove();
               }
             });
+            //el marker que permite marcar las ubicaciones de las mascotas
             const marker = new mapboxgl.Marker()
             .setLngLat([lng,lat])
             .setPopup(popup)
             .addTo(map);
-          });
+          });                         
         })
-        
+      })
       })
 
     const style = document.createElement("style")
@@ -107,7 +129,7 @@ customElements.define("home-page", class HomePage extends HTMLElement{
     }    
  
      
-    .pet-card.popup{
+    .pet-card{
       width:300px;
       z-index:3;
       position:fixed;
@@ -115,6 +137,29 @@ customElements.define("home-page", class HomePage extends HTMLElement{
       left:0;
       bottom:5%;
       margin:auto;
+
+    }
+    .pet-card.popup-open{
+      -webkit-animation: popup-open 1s ease forwards;
+    }
+    @keyframes popup-open {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .pet-card.popup-close{
+      -webkit-animation: popup-close 1s ease forwards;
+    }
+    @keyframes popup-close {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0);
+      }
     }
     .map__container{
       display:flex;

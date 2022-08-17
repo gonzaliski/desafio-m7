@@ -28,6 +28,7 @@ customElements.define("secondary-button", class SecondaryButton extends HTMLElem
         border-radius: 4px;
         width:100%;
         height:50px;
+        cursor:pointer;
     }
     .second-button:hover{
       color:white;

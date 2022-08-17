@@ -13,11 +13,21 @@ export async function createReport(petId, data){
         let userIdFromPet = pet.get("userId") as any
         let userFromPet = await User.findByPk(userIdFromPet)
         console.log(userFromPet);
+        const createdReport = await Report.create({
+          pet_name:data.petName,
+          phone_number:data.phone_number,
+          information:data.lastSeenLocation,
+          petId
+        })
         const msg = {
         to: `${userFromPet.get("email")}`,
         from: 'petfinder.apx@gmail.com', // Use the email address or domain you verified above
-        subject: 'Se ha reportado informacion de una mascota!',
-        text: 'and easy to do anywhere, even with Node.js',
+        subject: `Se ha reportado informacion de ${data.petName}!`,
+        text: `
+        De:${data.reporterName}
+        Telefono:${data.phoneNumber}
+        Lugar:${data.lastSeenLocation}
+        `,
         };
         console.log(msg);
         
@@ -29,13 +39,5 @@ export async function createReport(petId, data){
         .catch((error) => {
           console.error(error)
         })
-}
-
-export async function deleteReport(id){
-    return Report.destroy({
-        where:{
-            id
-        }
-    })
 }
 

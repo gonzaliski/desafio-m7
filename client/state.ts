@@ -1,4 +1,4 @@
-
+import {map} from "lodash"
 
 const API_BASE_URL = "http://localhost:3004"
 
@@ -66,8 +66,11 @@ export const state = {
           })
         })
         const newUser = await createdUser.json()
-        cs.fullName = data.fullName
-        this.setState(cs)
+        this.signIn(data.password).then((token)=>{
+         cs.fullName = data.fullName
+         cs.token = token
+         this.setState(cs)
+       })
         return newUser       
       },
 
@@ -88,11 +91,13 @@ export const state = {
       async updateOrCreateUser(userData){
         const cs = this.getState()
         const userExist = await this.getUser(cs.email)
+        var res
         if(userExist){
-          this.updateUser(userData)
+         res = await this.updateUser(userData)
         }else{
-          this.signUp(userData)
+          res = await this.signUp(userData)
         }
+        return res
       },
       
       async updateUser(userData){
@@ -155,8 +160,18 @@ export const state = {
           "Content-Type": "application/json",
           Authorization: `bearer ${cs.token}`,
         }})
-        const petsToJson = await myPets.json()
-        return petsToJson
+        let petsToJson = await myPets.json()
+        let petsToList = map(petsToJson)
+        let petsProcessed = petsToList.map(pet=>{return {
+          id: pet.id,
+          name: pet.name,
+          imageURL:pet.image_URL,
+          found:pet.found,
+          lat:pet.lat,
+          lng:pet.lng,
+          locationName:pet.zone
+        }})
+        return petsProcessed
       },
       async reportFound(petId){
         const cs = this.getState()
@@ -190,6 +205,15 @@ export const state = {
                 }})
         const petsToJson = await getNearPets.json()
         return petsToJson
+      },
+      async reportInfo(info,id){
+        const reportPetInfo = await fetch(API_BASE_URL + "/report" + "?petId=" + id,{
+          method:"post",
+          headers:{
+          "Content-Type": "application/json"
+            },
+          body:JSON.stringify(info)})
+        return reportPetInfo
       },
       logOut(){
         this.setState({})

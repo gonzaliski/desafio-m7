@@ -15,6 +15,8 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
        const navMenu = this.querySelector(".nav-menu")
        const logOutEl = this.querySelector(".log-out")
        const nearPets = this.querySelector(".nav-link.near-pets")
+       const userButton = this.querySelector(".nav-link.user")
+       const userMenu = this.querySelector(".user-info__container.menu")
        burger.addEventListener("click",()=>{
         burger.classList.toggle("active")
         navMenu.classList.toggle("active")
@@ -28,11 +30,15 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             Router.go("/home")
         }
        })
-
-       logOutEl.addEventListener("click",()=>{
-        state.logOut()
-        location.reload()
+       userButton.addEventListener("click",()=>{
+        console.log("a");
+        
+        userMenu.classList.toggle("active")
        })
+        logOutEl.addEventListener("click",()=>{
+            state.logOut()
+            location.reload()
+           })
     }
     render(){
         const cs = state.getState()
@@ -56,12 +62,16 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             <a class="nav-link near-pets" >Mascotas cerca</a>
         
         </li>
-        <div class="user-info__container">
+        <li class="nav-item">
+            <a class="nav-link user" ><i class="fa-solid fa-user"></i></a>
+        
+        </li>
+        <div class="user-info__container menu">
         <p class="user-name__display">${cs.email || "Usuario"}</p>
-        <a class="log-out">Cerrar sesión</a>
+        <a id="log-out" class="log-out">Cerrar sesión</a>
         </div>
+        
       </ul>
-
       <burger-menu></burger-menu>
       </nav>
     `
@@ -83,7 +93,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             list-style:none;
         }
 
-        .nav-menu{
+        .nav-menu {
             display:flex;
             position:fixed;
             height:auto;
@@ -109,6 +119,23 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
                 gap:30px;
                 box-shadow:none;
             }
+            .user-info__container.menu{
+                display: flex;
+                position: fixed;
+                height: 15%;
+                right: -100%;
+                top: 70px;
+                gap: 0;
+                flex-direction: column;
+                background-color: #d95b5b;
+                width: 30%;
+                gap: 30px;
+                transition: 0.3s;
+                justify-content: center;
+                box-shadow: 0px 20px 25px -10px rgb(0 0 0 / 50%);
+                z-index: 9;
+                align-items: center;
+            }
             burger-menu{
                 display:none;
             }
@@ -127,12 +154,20 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             color:inherit;
             font-weight:500;
             transition:0.7s ease;
+            cursor:pointer;
         }
         .nav-link:hover{
             color:white;
         }
-        .nav-link.near-pets{
-            cursor:pointer;
+
+        .nav-link.user{
+            display:none;
+        }
+        @media(min-width:768px){
+            .nav-link.user{
+                display:inline;
+            }
+
         }
         .user-info__container{
             display:flex;
@@ -145,21 +180,28 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             font-family:'Poppins';
            
         }
-        @media(min-width:768px){
-            .user-name__display{
-                display:none;
-            }
-        }
+      
         .log-out{
             font-family:'Poppins';
             color:blue;
             text-decoration:underline blue;
+            cursor:pointer;
         }
-        @media(min-width:768px){
-            .log-out{
-                display:none;
+      
+      
+        .user-info__container.menu.active{
+            position: absolute;
+            top: 64px;
+            right:0;
+            z-index: 9;
+        }
+        @media(max-width:768px){
+            .user-info__container.menu.active {
+                
             }
         }
+       
+        
 
     `
 

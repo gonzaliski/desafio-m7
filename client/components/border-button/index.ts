@@ -31,6 +31,7 @@ customElements.define("border-button", class BorderButton extends HTMLElement{
         width:100%;
         height:50px;
         transition:0.7s ease;
+        cursor:pointer;
     }
 
     .border-button:hover{

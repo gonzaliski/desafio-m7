@@ -15,6 +15,11 @@ customElements.define("user-data", class UserData extends HTMLElement{
 
     addListeners(){
       const userDataForm = this.querySelector("#user-data__form")
+      const sendButton = this.querySelector(".send-button")
+      sendButton.addEventListener("click",(e)=>{
+        e.preventDefault();
+        userDataForm.dispatchEvent(new Event("submit"))
+      })
       userDataForm.addEventListener("submit",async(e)=>{
         const cs = state.getState()
         e.preventDefault()
@@ -43,31 +48,31 @@ customElements.define("user-data", class UserData extends HTMLElement{
       this.innerHTML=`
         <header-el></header-el>
         <div class="content__container">
-        <div class="content">
-        <div class="title__container">
-        <h2>Mis Datos</h2>
-        </div>
-          <form id="user-data__form" class="form__container">
-            <ul class="form-inputs">
-              <label class="form-label">Nombre</label>
+          <div class="content">
+            <div class="title__container">
+              <h2>Mis Datos</h2>
+            </div>
+            <form id="user-data__form" class="form__container">
+              <ul class="form-inputs">
+                <label class="form-label">Nombre</label>
+                <li>
+                <input class="form-input name" name="name" type="text" placeholder=${cs.fullName || ""}></input>
+                </li>
+          
+                <li>
+                <label class="form-label">Contraseña</label>
+                <li>
+                  <input class="form-input" name="password" type="password"></input>
+                </li>
+              <label class="form-label">Repetir contraseña</label>
               <li>
-               <input class="form-input name" name="name" type="text" placeholder=${cs.fullName || ""}></input>
+                  <input class="form-input" name="repeat-password" type="password"></input>
               </li>
-        
-              <li>
-               <label class="form-label">Contraseña</label>
-               <li>
-                <input class="form-input" name="password" type="password"></input>
-              </li>
-            <label class="form-label">Repetir contraseña</label>
-            <li>
-                <input class="form-input" name="repeat-password" type="password"></input>
-            </li>
-               </li>
-            </ul>
-            <primary-button class="send-button" >Guardar</primary-button>
-          </form>
-        </div>
+                </li>
+              </ul>
+              <primary-button class="send-button" >Guardar</primary-button>
+            </form>
+          </div>
         </div>
             `
             const style = document.createElement("style")

@@ -9,7 +9,8 @@ Pet.init({
   lat:DataTypes.FLOAT,
   lng:DataTypes.FLOAT,
   found:DataTypes.BOOLEAN,
-  image_URL:DataTypes.STRING
+  image_URL:DataTypes.STRING,
+  zone:DataTypes.STRING
    
 }, {
   sequelize, // la conexión a la base

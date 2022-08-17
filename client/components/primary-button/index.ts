@@ -30,6 +30,7 @@ customElements.define("primary-button", class PrimaryButton extends HTMLElement{
         width:100%;
         height:50px;
         transition:0.7s ease;
+        cursor:pointer;
     }
     .save-button:hover{
       color:white;

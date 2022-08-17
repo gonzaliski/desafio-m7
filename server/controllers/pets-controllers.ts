@@ -40,11 +40,6 @@ function dataToIndex(data, id?) {
 
 export async function updateLocationOnAlgolia(data,petId){
     
-    if(data.imageURL){
-        const imageRes = await cloudinaryProcess(data.imageURL)
-
-         data.imageURL =  imageRes.secure_url    
-        }
     const indexItem = dataToIndex(data, petId);
     try{
         const algoliaRes = await index.partialUpdateObject(indexItem);
@@ -129,7 +124,7 @@ export async function getAllPets(){
 export async function lostPetsNear(lat,lng) {
     const {hits} = await index.search("",{
          aroundLatLng:`${lat}, ${lng}`,
-         aroundRadius:10000
+         aroundRadius:100000
        })
      const processedHits = processHits(hits)
      console.log(processedHits);

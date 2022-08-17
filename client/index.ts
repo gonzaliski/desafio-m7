@@ -5,6 +5,7 @@ import "./components/secondary-button"
 import "./components/border-button"
 import "./components/input"
 import "./components/pet-card"
+import "./components/report-info"
 
 
 import "./pages/home"

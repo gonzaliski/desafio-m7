@@ -53,7 +53,7 @@ customElements.define("check-page", class CheckPage extends HTMLElement{
         <form id="email-form" class="form__container">
           <div class="form-inputs">
             <label class="form-label">Email</label>
-             <input class="form-input name" name="email" type="text"></input>
+             <input class="form-input name" name="email" type="text" required />
           </div>
           <primary-button class="submit-button">Siguiente</primary-button>
         </form>

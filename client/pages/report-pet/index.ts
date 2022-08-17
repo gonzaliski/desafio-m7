@@ -28,14 +28,14 @@ customElements.define(
       const mapboxInput = this.querySelector(".location-input");
       const mapEl = this.querySelector(".mapbox-map");
       const mapboxButton = this.querySelector(".mapbox-button");
-      console.log(mapboxButton);
       
       const petNameInput = this.querySelector(".pet-name__input");
       
       const dropzoneImage: any = this.querySelector(".report-dropzone__img");
       const dropzoneButton = this.querySelector(".dropzone-button");
       const cancelButton = this.querySelector(".cancel-button")
-
+      const unpublishButton = this.querySelector(".unpublish-pet__link")
+      
       if(cs.editMode){
         const foundButton = this.querySelector(".founded-button")
         const overridePetName = petNameInput.shadowRoot.querySelector("input")
@@ -47,6 +47,12 @@ customElements.define(
         foundButtonActive.addEventListener("click",()=>{
           state.reportFound(cs.petToEdit.id)
           Router.go("/myReportedPets")
+        })
+        unpublishButton.addEventListener("click",()=>{
+          state.deletePet(cs.petToEdit.id)
+          alert("Reporte despublicado")
+          Router.go("/myReportedPets")
+
         })
       }
       var imageURL;
@@ -78,16 +84,18 @@ customElements.define(
         currentLat = cs.petToEdit.lat
         currentLng = cs.petToEdit.lng
       }
+      var locationToSearch
       initMapboxMap(mapEl, currentLat, currentLng).then((map) => {
+         
         console.log(map);
-        const marker = new mapboxgl.Marker({ draggable: true });
+        const marker = new mapboxgl.Marker();
         marker.setLngLat([currentLng, currentLat]).addTo(map);
         state.currentMarkerPosition(currentLng, currentLat);
         mapboxButton.addEventListener("click", (e) => {
-          const locationToSearch =
-            mapboxInput.shadowRoot.querySelector("input").value;
+          locationToSearch = mapboxInput.shadowRoot.querySelector("input").value;
            
           mapboxSearch(locationToSearch, function (results) {
+            
             const firstResult = results[0];
             const [lng, lat] = firstResult.geometry.coordinates;
             console.log(lng, lat);
@@ -97,10 +105,6 @@ customElements.define(
             state.currentMarkerPosition(lat, lng);
           });
         });
-        marker.on("dragend", () => {
-          const { lng, lat } = marker.getLngLat();
-          state.currentMarkerPosition(lat, lng);
-        });
       });
 
       reportButton.addEventListener("click",()=>{
@@ -109,9 +113,9 @@ customElements.define(
           petName:petName,
           imageURL:imageURL,
           lat:cs.petToReportLat,
-          lng:cs.petToReportLng
+          lng:cs.petToReportLng,
+          locationName:locationToSearch
         }
-        console.log(petData, "petData");
         
         if(!petName && !cs.editMode){
           alert("Falta el nombre de la mascota")
@@ -119,8 +123,8 @@ customElements.define(
         if(!imageURL && !cs.editMode){
           alert("Falta la foto de la mascota")
         }
-        if(!imageURL && !cs.editMode){
-          alert("Falta la foto de la mascota")
+        if(!locationToSearch && !cs.editMode){
+          alert("Falta la ubicacion de la mascota")
         }
         if(cs.editMode){
           state.updatePet(petData)
@@ -129,7 +133,8 @@ customElements.define(
           state.setState(cs)
           alert("Mascota Actualizada")
           Router.go("/myReportedPets")
-        }else{
+        }else if (petData.petName && petData.imageURL && 
+          petData.lat && petData.lng && petData.locationName){
 
           state.reportPet(petData)
           alert("Mascota Reportada")
@@ -139,11 +144,14 @@ customElements.define(
       cancelButton.addEventListener("click",()=>{
         Router.go("/home")
       })
+      
     }
     render() {
       const cs = state.getState()
       var defaultImg = require("../../assets/default-image.jpg");
       if(cs.editMode){
+        console.log(cs.petToedit);
+        
         defaultImg = cs.petToEdit.imageURL
 
       }
@@ -154,7 +162,7 @@ customElements.define(
         <div class="content">
 
          <div class="title__container">
-            <h2>Reportar mascota perdida</h2>
+            <h2>${cs.editMode ? "Editar" : "Reportar"} mascota perdida</h2>
          </div>
 
         <div class="report-container">
@@ -183,6 +191,7 @@ customElements.define(
           <primary-button class="report-button">Reportar como perdido</primary-button>
           <secondary-button class="founded-button">Reportar como encontrado</secondary-button>
           <border-button class="cancel-button">Cancelar</border-button>
+          <a class=${cs.editMode? "unpublish-pet__link active": "unpublish-pet__link"}>Despublicar</a>
 
         </div>
       </div>
@@ -290,6 +299,14 @@ customElements.define(
     }
     .founded-button.active{
       display:inline;
+    }
+    .unpublish-pet__link{
+      display:none;
+    }
+    .unpublish-pet__link{
+      display:inline;
+      text-decoration: underline;
+      cursor:pointer;
     }
     `;
       this.appendChild(style);
