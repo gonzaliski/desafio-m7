@@ -13,8 +13,8 @@
     "sync": "ts-node ./server/connection/sync.ts",
     "build:be": "tsc",
     "start": "node ./be-dist/index.js",
-    "build:fe": "parcel build ./client/index.html",
-    "build": "yarn build:be && yarn build:fe"
+    "build:fe": "parcel build ./client/index.html --dist-dir ./dist",
+    "build": "yarn run build:be && yarn run build:fe"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
