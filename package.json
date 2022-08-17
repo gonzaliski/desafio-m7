@@ -5,12 +5,6 @@
   "engines": {
     "node": "16.x"
   },
-  "targets": {
-    "global": {
-      "context": "browser",
-      "outputFormat": "global"
-    }
-  },
   "scripts": {
     "dev:api": "nodemon --watch server/**/* -e ts --exec ts-node ./server/index.ts",
     "dev:fe": "parcel serve ./client/index.html",

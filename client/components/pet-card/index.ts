@@ -1,4 +1,4 @@
-import { Router } from "@vaadin/router";
+const Router = require("@vaadin/router");
 import { state } from "../../state";
 const editButton = require("../../assets/edit.png")
 customElements.define("pet-card", class PetCard extends HTMLElement{

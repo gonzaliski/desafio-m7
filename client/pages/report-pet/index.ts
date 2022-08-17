@@ -1,4 +1,4 @@
-import { Router } from "@vaadin/router";
+const Router = require("@vaadin/router")
 import { state } from "../../state";
 import { dropzoneUpload } from "../../lib/dropzone";
 import { mapboxSearch, initMapboxMap } from "../../lib/mapbox";

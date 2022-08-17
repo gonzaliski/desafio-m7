@@ -1,4 +1,4 @@
-import { Router } from "@vaadin/router"
+const Router = require("@vaadin/router")
 import { state } from "../../state"
 
 customElements.define("header-el", class HeaderElement extends HTMLElement{

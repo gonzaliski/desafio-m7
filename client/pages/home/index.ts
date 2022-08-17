@@ -1,4 +1,4 @@
-import { Router } from "@vaadin/router";
+const Router = require("@vaadin/router")
 import { state} from "../../state"
 import mapboxgl from 'mapbox-gl';
 import "mapbox-gl/dist/mapbox-gl.css";
