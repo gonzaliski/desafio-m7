@@ -5,6 +5,7 @@ import { getReports, createReport} from "./controllers/reports-controller"
 import { getAllPets,lostPetsNear,createPet, updatePet,deletePet,userPets, reportFound } from "./controllers/pets-controllers"
 import {getToken} from "./controllers/auth-controller"
 import * as cors from "cors";
+import * as path from "path"
 import { authorizeMiddleware, bodyCheckMiddleware } from "./db/middlewares"
 
 const SECRET = process.env.SECRET
@@ -101,6 +102,12 @@ app.get("/pets-near-me", async(req, res) => {
     res.json(hits);
   });
   
+const relativeRoute = path.resolve(__dirname, "../dist");
+app.use(express.static(relativeRoute))
+app.get("*", function(req,res){
+  res.sendFile(relativeRoute + "../dist/index.html");
+})
+
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
