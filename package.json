@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "scripts": {
     "dev:api": "nodemon --watch server/**/* -e ts --exec ts-node ./server/index.ts",
@@ -34,8 +34,9 @@
     "parcel": "^2.6.2",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3",
     "tsc": "^2.0.4",
-    "sequelize": "^6.21.3"
+    "typescript": "^4.7.4"
   },
   "devDependencies": {
     "buffer": "^6.0.3",
