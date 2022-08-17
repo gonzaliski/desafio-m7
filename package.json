@@ -31,7 +31,7 @@
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^2.9.2",
     "nodemon": "^2.0.19",
-    "parcel": "^2.6.2",
+    "parcel": "^2.7.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.21.3",
