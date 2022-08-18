@@ -102,7 +102,6 @@ customElements.define(
             
             const firstResult = results[0];
             const [lng, lat] = firstResult.geometry.coordinates;
-            console.log(lng, lat);
             marker.setLngLat([lng, lat])
             map.setCenter([lng, lat]);
             map.setZoom(14);
@@ -158,7 +157,6 @@ customElements.define(
       const cs = state.getState()
       var defaultImg = require("../../assets/default-image.jpg");
       if(cs.editMode){
-        console.log(cs.petToedit);
         
         defaultImg = cs.petToEdit.imageURL
 

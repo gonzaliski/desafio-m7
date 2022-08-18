@@ -5,7 +5,6 @@ customElements.define("check-page", class CheckPage extends HTMLElement{
     super();
   }
   connectedCallback(){
-    console.log("check email page");
     
     this.render()
   }
@@ -24,7 +23,6 @@ customElements.define("check-page", class CheckPage extends HTMLElement{
         alert("Ingrese un email")
       }else{
 
-      console.log(target["email"].value);
       const emailExistRes = await state.processEmail(target["email"].value)
       if(emailExistRes!=null){
         console.log("a");

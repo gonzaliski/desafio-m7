@@ -6,11 +6,8 @@ customElements.define("password-page", class PasswordPage extends HTMLElement{
   }
   connectedCallback(){
     const cs = state.getState()
-    console.log("new user:", cs.newUser);
-    console.log("cs.activeSession:", cs.activeSession);
     
     if(!cs.activeSession && !cs.newUser && !cs.email){
-      console.log("going to email check");
       
       Router.go("/checkEmail")
     }
@@ -30,7 +27,6 @@ customElements.define("password-page", class PasswordPage extends HTMLElement{
         alert("Ingrese una contraseña")
       }
       const cs = state.getState()
-      console.log(target["password"].value);
         const token = await state.signIn(target["password"].value)
         if(token){
             cs.token = token

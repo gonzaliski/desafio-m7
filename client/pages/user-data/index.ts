@@ -33,7 +33,6 @@ customElements.define("user-data", class UserData extends HTMLElement{
           state.updateOrCreateUser(userData).then(()=>{
             Router.go("/home")
           })
-          console.log(userData);
           
         }else{
             alert("La contraseña no coincide")

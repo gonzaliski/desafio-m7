@@ -16,7 +16,6 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
     const cs = state.getState()
     const petsContainer = this.querySelector(".pets-container")
     const titleContainer = this.querySelector(".title-container")
-    console.log(titleContainer);
     
     const pets = await state.getMyPets()
     
@@ -39,7 +38,6 @@ customElements.define("my-reports", class MyReportsPage extends HTMLElement{
         let noPetsEl = document.createElement("div")
         noPetsEl.className = "no-pets__title"
         noPetsEl.innerHTML=`<h3>Aún no tenes mascotas reportadas</h3>`
-        console.log(noPetsEl);
         petsContainer.appendChild(noPetsEl)
       }
   }

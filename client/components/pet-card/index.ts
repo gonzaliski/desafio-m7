@@ -45,7 +45,6 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
               }else{
                 reqPet = cs.userPets.find(p=>p.id == this.petId)
               }
-                console.log(reqPet, this.petId);
               
               cs.petToEdit = reqPet
               cs.editMode = true
@@ -66,7 +65,6 @@ customElements.define("pet-card", class PetCard extends HTMLElement{
             })
         }
         reportButton.addEventListener("click",()=>{
-          console.log(petId, "petId");
           this.dispatchEvent(
             
             new CustomEvent("report", {

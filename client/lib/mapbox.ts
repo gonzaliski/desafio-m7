@@ -45,7 +45,6 @@ export async function mapboxSearch(location:string,callback){
           language: "es",
         },
         function (err, data, res) {
-          console.log(data);
           if (!err) callback(data.features);
         }
       );

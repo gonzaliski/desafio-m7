@@ -54,7 +54,6 @@ export const state = {
         return userRes
       },
       async signUp(data){
-        console.log({...data});
         const cs = this.getState()
         const createdUser = await fetch(API_BASE_URL + "/auth",{
           method:"post",
@@ -64,9 +63,12 @@ export const state = {
           })
         })
         const newUser = await createdUser.json()
+          cs.userId = newUser
+          
         this.signIn(data.password).then((token)=>{
          cs.fullName = data.fullName
          cs.token = token
+         cs.activeSession = true
          this.setState(cs)
        })
         return newUser       

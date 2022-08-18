@@ -10,10 +10,7 @@ customElements.define("home-page", class HomePage extends HTMLElement{
   connectedCallback(){
     this.render()
   }
-  addListeners(){
-    console.log(state.data);
-    
-  }
+
 
   async render(){
     
@@ -53,7 +50,6 @@ customElements.define("home-page", class HomePage extends HTMLElement{
       locatorButtonContainer.addEventListener("click",(e)=>{
         e.preventDefault()
         navigator.geolocation.getCurrentPosition((position:GeolocationPosition)=>{
-          console.log("coordenadas actualeS:",position.coords);
           cs.lat = position.coords.latitude
           cs.lng = position.coords.longitude
           state.setState(cs)
@@ -61,7 +57,6 @@ customElements.define("home-page", class HomePage extends HTMLElement{
 
         state.nearPets().then(async (petsRes)=>{
           const pets =  petsRes.filter((p)=>{return p.found == false})
-          console.log(pets);
           //esta variable permite obtener las mascotas del usuario por su id, asi luego podremos determinar si el usuario las
           //puede reportar(si no fue él quien las reportó)
           let userPetsbyId 
@@ -73,7 +68,6 @@ customElements.define("home-page", class HomePage extends HTMLElement{
               userPetsbyId =  petsById
             }
           
-          console.log(userPetsbyId, "userpetsbyid");
           
           pets.forEach(pet => {
             const lat = pet.lat
@@ -90,7 +84,6 @@ customElements.define("home-page", class HomePage extends HTMLElement{
               petEl.className="pet-el__container"
 
               petEl.addEventListener("report",(e:any)=>{
-                console.log("reportando..",e.detail);
                 const reportInfoEl = document.createElement("report-info")
                 reportInfoEl.setAttribute("id", e.detail.petId) 
                 reportInfoEl.setAttribute("name", e.detail.petName) 
@@ -103,7 +96,6 @@ customElements.define("home-page", class HomePage extends HTMLElement{
               const div = this.querySelector(
                 ".pet-el__container"
               );
-              console.log("div",div);
               if (div) {
                 const petElToClose = div.querySelector(
                   ".pet-card.popup-open"
@@ -202,6 +194,5 @@ customElements.define("home-page", class HomePage extends HTMLElement{
   }
     `
     this.appendChild(style)
-     this.addListeners()
   }
 })
