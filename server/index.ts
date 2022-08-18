@@ -8,7 +8,6 @@ import * as cors from "cors";
 import * as path from "path"
 import { authorizeMiddleware, bodyCheckMiddleware } from "./db/middlewares"
 
-const SECRET = process.env.SECRET
 var app = express()
 app.use(express.json({
     limit:"100mb"
@@ -102,7 +101,7 @@ app.get("/pets-near-me", async(req, res) => {
     res.json(hits);
   });
   
-const relativeRoute = path.resolve(__dirname, "../dist");
+const relativeRoute = path.resolve(__dirname, "../../dist");
 app.use(express.static(relativeRoute))
 app.get("*", function(req,res){
   res.sendFile(relativeRoute + "../dist/index.html");
