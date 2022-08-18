@@ -93,7 +93,7 @@ app.get("/pets-near-me", async(req, res) => {
 const relativeRoute = path.resolve(__dirname, "../../dist");
 app.use(express.static(relativeRoute))
 app.get("*", function(req,res){
-  res.sendFile(relativeRoute + "../dist/index.html");
+  res.sendFile(relativeRoute + "../../dist/index.html");
 })
 
 
