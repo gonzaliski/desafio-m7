@@ -72,8 +72,8 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             <a class="nav-link user" ><i class="fa-solid fa-user"></i></a>
         
         </li>
-        <div class="user-info__container menu">
-        <p class="user-name__display">${cs.email || "Usuario"}</p>
+        <div class="user-info__container menu" style=${cs.activeSession ? "" : "display:none"}>
+        <p class="user-name__display">${cs.email}</p>
         <a id="log-out" class="log-out">Cerrar sesión</a>
         </div>
         

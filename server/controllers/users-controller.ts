@@ -31,11 +31,12 @@ export function getAllUsers(){
 }
 
 
-export async function updateUser(userId,data){
+export async function updateUser(data,userId){
     const dataToUpdate = {
         full_name:data.fullName,
         password:data.password
     }
+    console.log("eee");
     if(dataToUpdate.full_name){
         await User.update({full_name:dataToUpdate.full_name},{
             where:{
@@ -44,6 +45,8 @@ export async function updateUser(userId,data){
         })
         }
     if(dataToUpdate.password){
+        console.log("aaa");
+        
         await updatePassword(dataToUpdate.password,userId)
     }
     return dataToUpdate
@@ -58,27 +61,3 @@ export async function deleteUser(id){
 }
 
 
-// export async function updateUsers(userId, data){
-//     if(data.imageURL){
-
-//         const imageRes = await cloudinary.uploader.upload(data.imageURL,
-//             {
-//                 resource_type:"image",
-//                 discard_original_filename:true,
-//                 witdh:1000,
-//             })
-//   const dataToUpdate = {
-//     name: data.name,
-//     bio:data.bio,
-//     imageURL:data.imageURL
-// }
-// await User.update(dataToUpdate,{
-//     where:{
-//         id:userId
-//     }
-// })
-// return dataToUpdate
-// }else{
-//     console.error("no hay imagen")
-// }
-// }
