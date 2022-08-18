@@ -9,7 +9,7 @@
     "dev": "ts-node dev.ts",
     "sync": "ts-node ./server/connection/sync.ts",
     "build:be": "tsc",
-    "start": "node ./be-dist/index.js",
+    "start": "node ./be-dist/server/index.js",
     "build:fe": "parcel build ./client/index.html --dist-dir ./dist",
     "build": "yarn run build:be && yarn run build:fe"
   },
