@@ -42,16 +42,6 @@ app.put("/update-user",bodyCheckMiddleware,authorizeMiddleware,async(req,res)=>{
     res.json(update)
 })
 
-app.delete("/user",async(req,res)=>{
-    const {userId} = req.query
-    const deletedReport = await deleteUser(userId)
-    res.json(deletedReport)
-})
-
-app.get("/me",authorizeMiddleware, async(req,res)=>{
-    res.json({token:"valido"})
-})
-
 app.post("/new-pet",authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
     const newPet = await createPet(req.body,userId)

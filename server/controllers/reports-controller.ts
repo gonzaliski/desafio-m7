@@ -15,7 +15,7 @@ export async function createReport(petId, data){
         console.log(userFromPet);
         const createdReport = await Report.create({
           pet_name:data.petName,
-          phone_number:data.phone_number,
+          phone_number:data.phoneNumber,
           information:data.lastSeenLocation,
           petId
         })
