@@ -2,9 +2,7 @@
   "name": "pet-finder-app",
   "version": "1.0.0",
   "license": "MIT",
-  "engines": {
-    "node": "18.x"
-  },
+  
   "scripts": {
     "dev:api": "nodemon --watch server/**/* -e ts --exec ts-node ./server/index.ts",
     "dev:fe": "parcel serve ./client/index.html",
@@ -12,9 +10,9 @@
     "dev": "ts-node dev.ts",
     "sync": "ts-node ./server/connection/sync.ts",
     "build:be": "tsc",
-    "start": "node ./be-dist/server/index.js",
     "build:fe": "parcel build ./client/index.html --dist-dir ./dist",
-    "build": "yarn run build:be && yarn run build:fe"
+    "build": "yarn build:be && yarn build:fe",
+    "start": "node ./be-dist/server/index.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",

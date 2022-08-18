@@ -6,7 +6,5 @@
         "resolveJsonModule": true,
         "outDir": "be-dist"
     },
-    "includes":["./server/**/*.ts"],
-    "exclude": ["client"]
-    
+    "includes":["./server/**/*.ts"]    
 }
