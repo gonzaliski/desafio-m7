@@ -5,7 +5,7 @@ export const sequelize = new Sequelize({
     password:process.env.SEQUELIZE_PASSWORD,
     database: process.env.SEQUELIZE_DATABASE,
     port: 5432,
-    host: process.env.SEQUELIZE_host,
+    host: process.env.SEQUELIZE_HOST,
     ssl: true,
     // esto es necesario para que corra correctamente
     dialectOptions: {
