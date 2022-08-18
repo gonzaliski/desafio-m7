@@ -27,7 +27,6 @@ export const state = {
       },
       setState(newState) {
         // modifica this.data (el state) e invoca los callbacks
-        console.log(newState);
         localStorage.setItem("data",JSON.stringify(newState))
         this.data = newState;
           for (const cb of this.listeners) {
@@ -46,7 +45,6 @@ export const state = {
           const cs = this.getState()
           cs.email=email;
           const userRes = await this.getUser(email)
-          console.log(userRes);
           
           if(userRes){
             cs.userId = userRes.id;
@@ -112,9 +110,11 @@ export const state = {
           body:JSON.stringify(userData)
         })
         const newData = await updateUser.json()
-        console.log(newData);
-        
-
+        if(newData.full_name){
+          cs.fullName = newData.full_name
+          this.setState(cs)
+        }
+        return
       },
       async reportPet(data){
         const cs = this.getState()
@@ -127,7 +127,6 @@ export const state = {
           body:JSON.stringify(data)
         })
         const newPet = await createPet.json()
-        console.log(newPet);
         return newPet
       },
       async updatePet(data){
@@ -141,7 +140,6 @@ export const state = {
           body:JSON.stringify(data)
         })
         const updatePetRes = await updatePet.json()
-        console.log(updatePetRes);
         return updatePetRes
       },
       currentMarkerPosition(lat, lng){

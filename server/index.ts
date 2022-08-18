@@ -1,6 +1,6 @@
 import * as express from "express"
 import 'dotenv/config'
-import { createUser,findMail, updateUser,deleteUser} from "./controllers/users-controller"
+import { createUser,findMail, updateUser} from "./controllers/users-controller"
 import { getReports, createReport} from "./controllers/reports-controller"
 import { getAllPets,lostPetsNear,createPet, updatePet,deletePet,userPets, reportFound } from "./controllers/pets-controllers"
 import {getToken} from "./controllers/auth-controller"
@@ -36,8 +36,6 @@ app.post("/auth/token",bodyCheckMiddleware, async(req,res)=>{
 
 app.put("/update-user",bodyCheckMiddleware,authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
-    console.log(req.body);
-    
     const update = await updateUser(req.body, userId)
     res.json(update)
 })
@@ -90,7 +88,8 @@ app.get("/pets-near-me", async(req, res) => {
     const hits = await lostPetsNear(lat,lng)
     res.json(hits);
   });
-  
+
+
 const relativeRoute = path.resolve(__dirname, "../../dist");
 app.use(express.static(relativeRoute))
 app.get("*", function(req,res){

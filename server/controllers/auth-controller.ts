@@ -24,10 +24,15 @@ export async function getToken(data){
 
 export async function updatePassword(newPass,userId){
     const hashedPassword = getSHA256ofString(newPass)
-    return await Auth.update({password:hashedPassword},{
+    console.log("aaaa");
+    
+    try{ return await Auth.update({password:hashedPassword},{
         where:{
             user_id:userId
         }
     })
+}catch(e){
+    return e
+}
 }
 
