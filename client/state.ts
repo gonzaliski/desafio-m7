@@ -1,6 +1,6 @@
 import {map} from "lodash"
 
-const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3004"
+const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
 
 
 export const state = {
