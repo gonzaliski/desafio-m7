@@ -1,6 +1,6 @@
+const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
 import {map} from "lodash"
 
-const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
 
 
 export const state = {
