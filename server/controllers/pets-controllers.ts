@@ -96,7 +96,10 @@ function procesData(data) {
       res.lng = data.lng
     }
     if(data.imageURL){
-        res.image_URL = data.imageURL
+      res.image_URL = data.imageURL
+    }
+    if(data.locationName){
+      res.zone = data.locationName
     }
 
     return res;
@@ -107,7 +110,7 @@ export async function updatePet(data,id){
     const imageRes = await cloudinaryProcess(data.imageURL)
     data.imageURL = imageRes.secure_url 
   }
-  if(data.lat && data.lng){
+  if(data.lat && data.lng && data.locationName){
     await updateLocationOnAlgolia(data,id)
   }
     const dataToUpdate = procesData(data)
