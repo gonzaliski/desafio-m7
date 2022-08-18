@@ -96,7 +96,7 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
             display:flex;
             align-items:center;
             gap:5px;
-            cursor:pointe
+            cursor:pointer;
         }
         @media(min-width:768px){
             .logo-container{
