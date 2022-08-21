@@ -17,6 +17,7 @@ customElements.define(
     addListeners() {
       const formEl = this.querySelector("#send-info__form");
       const sendButton = this.querySelector(".send-button");
+      const closeButton = this.querySelector(".close__container");
       sendButton.addEventListener("click", (e) => {
         e.preventDefault();
         formEl.dispatchEvent(new Event("submit"));
@@ -40,11 +41,18 @@ customElements.define(
 
         }        
       });
+      closeButton.addEventListener("click",()=>{
+        this.remove()
+      })
     }
 
     render() {
       this.innerHTML = `
         <div class="content">
+          <div class="close__container">
+             <i class="fa-solid fa-x"></i>
+      
+          </div>
             <div class="title__container">
               <h2>Reportar info de ${this.name}</h2>
             </div>
@@ -75,7 +83,7 @@ customElements.define(
             padding: 10% 20%;
             width: 100%;
             height: 100vh;
-            position: fixed;
+            position: relative;
             z-index: 9;
             background-color: white;
             
@@ -85,6 +93,20 @@ customElements.define(
               padding: 10% 40%;
             }
           }
+
+          .close__container{
+            position: absolute;
+            top:5%;
+            right:20%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid;
+          }
+          
+
           .form__container{
               width:100%;
               height:100%;

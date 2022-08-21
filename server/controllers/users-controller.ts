@@ -52,12 +52,4 @@ export async function updateUser(data,userId){
     return dataToUpdate
 }
 
-export async function deleteUser(id){
-    return User.destroy({
-        where:{
-            id
-        }
-    })
-}
-
 
