@@ -104,6 +104,7 @@ customElements.define(
             align-items: center;
             justify-content: center;
             border: 1px solid;
+            cursor:pointer;
           }
           
 
