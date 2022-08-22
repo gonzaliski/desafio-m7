@@ -54,14 +54,14 @@ customElements.define("header-el", class HeaderElement extends HTMLElement{
       </div>
       <ul class="nav-menu">
         <li class="nav-item">
-            <a class="nav-link" href="/myData" >Mis datos</a>
+            <a class="nav-link" href=${cs.activeSession ? "/myData" : "/checkEmail"}>Mis datos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/myReportedPets" >Mis mascotas reportadas</a>
+            <a class="nav-link" href=${cs.activeSession ? "/myReportedPets" : "/checkEmail"} >Mis mascotas reportadas</a>
         
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/reportPet" >Reportar mascota</a>
+            <a class="nav-link" href=${cs.activeSession ? "/reportPet" : "/checkEmail"} >Reportar mascota</a>
         
         </li>
         <li class="nav-item">

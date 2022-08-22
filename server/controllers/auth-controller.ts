@@ -8,6 +8,8 @@ export function getSHA256ofString(text){
 export async function getToken(data){
     const {email, password} = data
     const hashedPassword = getSHA256ofString(password)
+
+    try{
     const auth =  await Auth.findOne({
         where:{
             email,
@@ -19,20 +21,22 @@ export async function getToken(data){
     if(auth){
        token = jwt.sign({id:auth.get("user_id")},SECRET)
     }
-   return token
+        return token
+    }catch(error){
+        throw error
+        }
 }
 
 export async function updatePassword(newPass,userId){
     const hashedPassword = getSHA256ofString(newPass)
-    console.log("aaaa");
     
     try{ return await Auth.update({password:hashedPassword},{
         where:{
             user_id:userId
         }
     })
-}catch(e){
-    return e
-}
+    }catch(e){
+        throw e
+    }
 }
 

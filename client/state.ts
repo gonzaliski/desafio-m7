@@ -1,4 +1,5 @@
-const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
+// const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
+const API_BASE_URL = "http://localhost:3004"
 import {map} from "lodash"
 
 
@@ -13,6 +14,8 @@ export const state = {
         this.listeners.push(callback);
      },
      getState() {
+      console.log(this.data);
+      
         return this.data;
       },
       init(){
@@ -144,10 +147,12 @@ export const state = {
         const updatePetRes = await updatePet.json()
         return updatePetRes
       },
-      currentMarkerPosition(lat, lng){
+      currentMarkerPosition(lng, lat){
         const cs = this.getState()
         cs.petToReportLat = lat
         cs.petToReportLng = lng
+        console.log("lat:",cs.petToReportLat," lng:",cs.petToReportLng);
+        
         this.setState(cs)
       },
 

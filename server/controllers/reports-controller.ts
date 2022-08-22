@@ -1,7 +1,5 @@
 import { Report, Pet, User} from "../db/models"
-import { createPet,updatePet } from "./pets-controllers"
 import {sgMail} from "../lib/sendgrid"
-import { index } from "../lib/algolia"
 
 
 export async function getReports(){
@@ -9,6 +7,7 @@ export async function getReports(){
 }
 
 export async function createReport(petId, data){
+  try{
         const pet = await Pet.findByPk(petId)
         let userIdFromPet = pet.get("userId") as any
         let userFromPet = await User.findByPk(userIdFromPet)
@@ -30,14 +29,18 @@ export async function createReport(petId, data){
         `,
         };
         console.log(msg);
-        
+
         sgMail
         .send(msg)
         .then(() => {
           console.log('Email sent')
         })
         .catch((error) => {
-          console.error(error)
+          throw error
         })
+      }catch(e){
+        throw e
+      }
+        
 }
 

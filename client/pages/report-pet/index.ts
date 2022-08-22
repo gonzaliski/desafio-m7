@@ -4,8 +4,8 @@ import { dropzoneUpload } from "../../lib/dropzone";
 import { mapboxSearch, initMapboxMap } from "../../lib/mapbox";
 import * as mapboxgl from "mapbox-gl";
 const defaultLocation = {
-  lat:-58.381512,
-  lng:-34.603719 
+  lng:-58.381512,
+  lat:-34.603719 
 }
 
 customElements.define(
@@ -87,6 +87,7 @@ customElements.define(
       if(cs.editMode){
         currentLat = cs.petToEdit.lat
         currentLng = cs.petToEdit.lng
+        state.currentMarkerPosition(currentLng, currentLat);
       }
       var locationToSearch
       initMapboxMap(mapEl, currentLat, currentLng).then((map) => {
@@ -105,7 +106,7 @@ customElements.define(
             marker.setLngLat([lng, lat])
             map.setCenter([lng, lat]);
             map.setZoom(14);
-            state.currentMarkerPosition(lat, lng);
+            state.currentMarkerPosition(lng, lat);
           });
         });
       });

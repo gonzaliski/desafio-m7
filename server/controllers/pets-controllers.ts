@@ -13,16 +13,17 @@ import { index } from "../lib/algolia"
         }
     }).then(()=>{})
     }catch(e){
-      console.log(e);
+      throw e
       
     }
 }
 
 async function deletePetOnAlgolia(petId){
-  index.deleteObject(petId).then(()=>{
+  try{index.deleteObject(petId).then(()=>{
     console.log("deleted on algolia");
-    
-  })
+  })}catch(e){
+    throw e
+  }
 }
 
 function dataToIndex(data, id?) {
@@ -47,21 +48,31 @@ export async function updateLocationOnAlgolia(data,petId){
 }
 
 async function cloudinaryProcess(image){
-   return await cloudinary.uploader.upload(image,
+   try { 
+    const cloudinaryRes = await cloudinary.uploader.upload(image,
         {
             resource_type:"image",
             discard_original_filename:true,
             witdh:1000,
         })
+        return cloudinaryRes
+      }catch(e){
+        throw e
+      }
 }
 
 export async function createPet(data,userId){
     var petImageURL
     
     if(data.imageURL){
-        const imageRes = await cloudinaryProcess(data.imageURL)
+      try{
 
-         petImageURL =  imageRes.secure_url    
+        const imageRes = await cloudinaryProcess(data.imageURL)
+        
+        petImageURL =  imageRes.secure_url    
+      }catch(e){
+        throw e
+      }
         }
         const petData ={
           name:data.petName,
@@ -72,18 +83,21 @@ export async function createPet(data,userId){
           zone:data.locationName,
           userId
         }
+        try{
+          const createdPet = await Pet.create({
+            ...petData
+          })
+          let algoliaRes =  await saveLocationOnAlgolia(
+            {
+              lat:petData.lat,
+              lng:petData.lng,
+              petId:createdPet.get("id")
+            })
+            return createdPet
+          }catch(error){
+            throw error
+          }
 
-    const createdPet = await Pet.create({
-       ...petData
-    })
-    let algoliaRes =  await saveLocationOnAlgolia(
-      {
-      lat:petData.lat,
-      lng:petData.lng,
-      petId:createdPet.get("id")
-    })
-
-    return createdPet
 }
 function procesData(data) {
     const res: any = {};
@@ -125,26 +139,32 @@ export async function updatePet(data,id){
 }
 
 export async function getAllPets(){
-    return  Pet.findAll({})
+    try{return  await Pet.findAll({})}catch(e){
+      throw e
+    }
 }
 
 export async function getAllPetsWithIds(ids:Array<Number | String>){
-  return Pet.findAll({
+  try{return await Pet.findAll({
     where:{id:ids}
-  })
+  })}catch(e){
+    throw e
+  }
 }
 
 
 export async function lostPetsNear(lat,lng) {
-    const {hits} = await index.search("",{
+    try{
+      const {hits} = await index.search("",{
          aroundLatLng:`${lat}, ${lng}`,
          aroundRadius:100000
        })
-     const processedHits = processHits(hits)
-     console.log("LOS HITSSS", processedHits);
-     
+     const processedHits = processHits(hits)     
      const nearPetsRes = await getAllPetsWithIds(processedHits)
      return nearPetsRes
+    }catch(e){
+      throw e
+     }
  }
  function processHits(hits){
      const res = hits.map((h)=>{
@@ -154,27 +174,41 @@ export async function lostPetsNear(lat,lng) {
        return res
      }
 export async function reportFound(id){
-  const petWasFound = await Pet.update({found:true},{
-    where:{
+  try{
+    const petWasFound = await Pet.update({found:true},{
+      where:{
         id
-    }
-})
-  return petWasFound  
+      }
+    })
+    return petWasFound  
+  }catch(e){
+    throw e
+  }
 }
      export async function deletePet(id){
-      await deletePetOnAlgolia(id)
-      return Pet.destroy({
+      try{
+
+        await deletePetOnAlgolia(id)
+        return Pet.destroy({
           where:{
-              id
+            id
           }
-      })
+        })
+      }catch(e){
+        throw e
+      }
   }
   
   export async function userPets(req){
-    return await Pet.findAll({
-      where:{
+    try{
+
+      return await Pet.findAll({
+        where:{
           userId:req
-      },
-      include:[User]
-  })
+        },
+        include:[User]
+      })
+    }catch(e){
+      throw e
+    }
   }

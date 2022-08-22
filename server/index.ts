@@ -16,63 +16,100 @@ app.use(express.json({
 const port = process.env.PORT || 3004
 //sign up
 app.post("/auth", bodyCheckMiddleware,async(req,res)=>{
-    
-    const user = await createUser(req.body)
+    try{
+        const user = await createUser(req.body)
+        res.json(user)
+    }catch(error){
+        res.status(400).json(error)
+    }
 
-    res.json(user)
 })
 
-
 app.get("/email",async(req,res)=>{
-    const userFromMail = await findMail(req.query.email)
-    res.json(userFromMail)
+    try{
+        const userFromMail = await findMail(req.query.email)
+        res.json(userFromMail)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 //sign in
 app.post("/auth/token",bodyCheckMiddleware, async(req,res)=>{
-    const token = await getToken(req.body)
-    res.json(token)
+    try{
+        const token = await getToken(req.body)
+        res.json(token)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 
 
 app.put("/update-user",bodyCheckMiddleware,authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
-    const update = await updateUser(req.body, userId)
-    res.json(update)
+    try{
+        const update = await updateUser(req.body, userId)
+        res.json(update)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 
 app.post("/new-pet",authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
-    const newPet = await createPet(req.body,userId)
-    res.json(newPet)
+    try{
+        const newPet = await createPet(req.body,userId)
+        res.json(newPet)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 app.get("/me/pets",authorizeMiddleware,async(req,res)=>{
     const {userId} = req.query
-    const data = await userPets(userId)
-    res.json(data)
+    try{
+        const data = await userPets(userId)
+        res.json(data)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 app.put("/update-pet",authorizeMiddleware,async(req,res)=>{
     const {petId} = req.query
-    const data = await updatePet(req.body,petId)
-    res.json(data)
+    try{
+        const data = await updatePet(req.body,petId)
+        res.json(data)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 app.put("/pet-found",authorizeMiddleware,async(req,res)=>{
     const {petId} = req.query
-    const data = await reportFound(petId)
-    res.json(data)
+    try{
+
+        const data = await reportFound(petId)
+        res.json(data)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 app.delete("/pet",authorizeMiddleware,async(req,res)=>{
     const {petId} = req.query
-    const data = await deletePet(petId)
-    res.json(data)
+    try{
+        const data = await deletePet(petId)
+        res.json(data)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
 
 app.post("/report",async(req,res)=>{
     const {petId} = req.query
-    const newReport = await createReport(petId,req.body)
-    res.json(newReport)
+    try{
+        const newReport = await createReport(petId,req.body)
+        res.json(newReport)
+    }catch(error){
+        res.status(400).json(error)
+    }
 })
-
-
 
 app.get("/all-reports",async(req,res)=>{
     const reports = await getReports()
@@ -85,8 +122,12 @@ app.get("/all-pets",async(req,res)=>{
 
 app.get("/pets-near-me", async(req, res) => {
     const {lat,lng} = req.query
-    const hits = await lostPetsNear(lat,lng)
-    res.json(hits);
+    try{
+        const hits = await lostPetsNear(lat,lng)
+        res.json(hits);
+    }catch(error){
+        res.status(400).json(error)
+    }
   });
 
 const relativeRoute = path.resolve(__dirname, "../../dist");
