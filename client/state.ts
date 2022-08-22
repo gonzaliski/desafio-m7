@@ -1,5 +1,4 @@
-// const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
-const API_BASE_URL = "http://localhost:3004"
+const API_BASE_URL = "https://dwf-m7-petfinder-app.herokuapp.com"
 import {map} from "lodash"
 
 
