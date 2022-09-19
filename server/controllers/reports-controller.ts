@@ -13,7 +13,7 @@ export async function createReport(petId, data){
         let userFromPet = await User.findByPk(userIdFromPet)
         console.log(userFromPet);
         const createdReport = await Report.create({
-          pet_name:data.petName,
+          pet_name:pet.get("name"),
           phone_number:data.phoneNumber,
           information:data.lastSeenLocation,
           petId
@@ -21,11 +21,11 @@ export async function createReport(petId, data){
         const msg = {
         to: `${userFromPet.get("email")}`,
         from: 'petfinder.apx@gmail.com', // Use the email address or domain you verified above
-        subject: `Se ha reportado informacion de ${pet.get("name")}!`,
+        subject: `Se ha reportado informacion de ${pet.get("name") as string}!`,
         text: `
-        De:${data.reporterName}
-        Telefono:${data.phoneNumber}
-        Lugar:${data.lastSeenLocation}
+        De: ${data.reporterName}
+        Telefono: ${data.phoneNumber}
+        Lugar: ${data.lastSeenLocation}
         `,
         };
         console.log(msg);
