@@ -9,6 +9,8 @@ export async function getReports(){
 export async function createReport(petId, data){
   try{
         const pet = await Pet.findByPk(petId)
+        console.log("pet",pet);
+        
         let userIdFromPet = pet.get("userId") as any
         let userFromPet = await User.findByPk(userIdFromPet)
         console.log(userFromPet);
