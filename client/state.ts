@@ -1,5 +1,5 @@
-const API_BASE_URL = "http://localhost:3004";
-// const API_BASE_URL = "https://desafio-m7.vercel.app";
+const API_BASE_URL = "https://desafio-m7.vercel.app";
+// const API_BASE_URL = "http://localhost:3004";
 import { map } from "lodash";
 
 export const state = {
