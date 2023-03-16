@@ -2,7 +2,6 @@
   "name": "pet-finder-app",
   "version": "1.0.0",
   "license": "MIT",
-  
   "scripts": {
     "dev:api": "nodemon --watch server/**/* -e ts --exec ts-node ./server/index.ts",
     "dev:fe": "parcel serve ./client/index.html",
@@ -15,7 +14,6 @@
     "start": "node ./be-dist/server/index.js"
   },
   "dependencies": {
-    "@sendgrid/mail": "^7.7.0",
     "@types/node": "^18.7.6",
     "@vaadin/router": "^1.7.4",
     "algoliasearch": "^4.14.2",
@@ -29,6 +27,7 @@
     "lodash": "^4.17.21",
     "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^2.9.2",
+    "nodemailer": "^6.8.0",
     "nodemon": "^2.0.19",
     "parcel": "^2.7.0",
     "pg": "^8.7.3",

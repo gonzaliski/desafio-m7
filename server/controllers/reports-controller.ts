@@ -1,46 +1,35 @@
-import { Report, Pet, User} from "../db/models"
-import {sgMail} from "../lib/sendgrid"
+import { Report, Pet, User } from "../db/models";
+import { transporter } from "../lib/nodemailer";
 
-
-export async function getReports(){
-    return Report.findAll({})
+export async function getReports() {
+  return Report.findAll({});
 }
 
-export async function createReport(petId, data){
-  try{
-        const pet = await Pet.findByPk(petId)
-        let userIdFromPet = pet.get("userId") as any
-        let userFromPet = await User.findByPk(userIdFromPet)
-        console.log(userFromPet);
-        const createdReport = await Report.create({
-          pet_name:pet.get("name"),
-          phone_number:data.phoneNumber,
-          information:data.lastSeenLocation,
-          petId
-        })
-        const msg = {
-        to: `${userFromPet.get("email")}`,
-        from: 'petfinder.apx@gmail.com', // Use the email address or domain you verified above
-        subject: `Se ha reportado informacion de ${data.petName}!`,
-        text: `
+export async function createReport(petId, data) {
+  try {
+    const pet = await Pet.findByPk(petId);
+    let userIdFromPet = pet.get("userId") as any;
+    let userFromPet = await User.findByPk(userIdFromPet);
+    await Report.create({
+      pet_name: pet.get("name"),
+      phone_number: data.phoneNumber,
+      information: data.lastSeenLocation,
+      petId,
+    });
+    try {
+      await transporter.sendMail({
+        from: `Pet finder App <${process.env.GMAIL_USER}>`, // sender address
+        to: userFromPet.get("email"), // list of receivers
+        subject: `Se ha reportado informacion de ${data.petName}!`, // Subject line
+        text: ` 
         De: ${data.reporterName}
         Telefono: ${data.phoneNumber}
-        Lugar: ${data.lastSeenLocation}
-        `,
-        };
-        console.log(msg);
-
-        sgMail
-        .send(msg)
-        .then(() => {
-          console.log('Email sent')
-        })
-        .catch((error) => {
-          throw error
-        })
-      }catch(e){
-        throw e
-      }
-        
+        Lugar: ${data.lastSeenLocation}`, // plain text body
+      });
+    } catch (e) {
+      throw e;
+    }
+  } catch (e) {
+    throw e;
+  }
 }
-
