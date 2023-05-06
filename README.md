@@ -1,5 +1,5 @@
 # desafio-m7 Pet finder app
-HTML + CSS + TYPESCRIPT + POSTGRESQL + SEQUELIZE + VERCEL
+HTML + CSS + TYPESCRIPT + POSTGRESQL + SEQUELIZE
 
 App: https://petfinder-9v4v.onrender.com
 
